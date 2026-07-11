@@ -31,43 +31,52 @@
 </head>
 <body class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200 flex h-screen overflow-hidden">
 
-    <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col justify-between shrink-0 shadow-2xl z-20 hidden md:flex">
+    <aside id="sidebar" class="w-64 bg-slate-900 text-slate-300 flex flex-col justify-between shrink-0 shadow-2xl z-20 hidden md:flex transition-all duration-300 ease-in-out">
         <div>
-            <div class="h-16 flex items-center px-6 border-b border-slate-800">
-                <div class="flex items-center gap-3">
-                    <div class="bg-indigo-600 p-1.5 rounded-lg text-white">
+            <div class="h-16 flex items-center px-5 border-b border-slate-800">
+                <div class="flex items-center gap-3 overflow-hidden">
+                    <div class="bg-indigo-600 p-1.5 rounded-lg text-white shrink-0">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
                     </div>
-                    <span class="text-white font-bold text-lg tracking-wider">NTTU RFID</span>
+                    <span class="sidebar-text text-white font-bold text-lg tracking-wider whitespace-nowrap transition-opacity duration-300">NTTU RFID</span>
                 </div>
             </div>
-            <nav class="p-4 space-y-2 mt-4" id="nav-menu">
-                <button onclick="app.switchTab('dashboard')" id="btn-dashboard" class="w-full flex items-center gap-3 bg-indigo-500/10 text-indigo-300 px-4 py-3 rounded-xl font-semibold transition-all duration-300 border border-indigo-500/30">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z"></path></svg>
-                    <span>Bảng điều khiển</span>
+            <nav class="p-3 space-y-2 mt-4" id="nav-menu">
+                <button onclick="app.switchTab('dashboard')" id="btn-dashboard" class="w-full flex items-center gap-3 bg-indigo-500/10 text-indigo-300 px-3 py-3 rounded-xl font-semibold transition-all duration-300 border border-indigo-500/30 overflow-hidden" title="Bảng điều khiển">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z"></path></svg>
+                    <span class="sidebar-text whitespace-nowrap transition-opacity duration-300">Bảng điều khiển</span>
                 </button>
-                <button onclick="app.switchTab('students')" id="btn-students" class="w-full flex items-center gap-3 text-slate-400 hover:bg-slate-800/50 hover:text-white px-4 py-3 rounded-xl font-medium transition-all">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                    <span>Quản lý Thẻ & SV</span>
+                <button onclick="app.switchTab('students')" id="btn-students" class="w-full flex items-center gap-3 text-slate-400 hover:bg-slate-800/50 hover:text-white px-3 py-3 rounded-xl font-medium transition-all overflow-hidden" title="Quản lý Thẻ & SV">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <span class="sidebar-text whitespace-nowrap transition-opacity duration-300">Quản lý Thẻ & SV</span>
                 </button>
-                <button onclick="app.switchTab('settings')" id="btn-settings" class="w-full flex items-center gap-3 text-slate-400 hover:bg-slate-700/50 hover:text-white px-4 py-3 rounded-xl font-semibold transition-all duration-300">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                    <span>Cài đặt</span>
+                <button onclick="app.switchTab('portal')" id="btn-portal" class="w-full flex items-center gap-3 text-slate-400 hover:bg-slate-800/50 hover:text-white px-3 py-3 rounded-xl font-medium transition-all overflow-hidden" title="Cổng Tra cứu">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <span class="sidebar-text whitespace-nowrap transition-opacity duration-300">Cổng Tra cứu</span>
+                </button>
+                <button onclick="app.switchTab('settings')" id="btn-settings" class="w-full flex items-center gap-3 text-slate-400 hover:bg-slate-700/50 hover:text-white px-3 py-3 rounded-xl font-semibold transition-all duration-300 overflow-hidden" title="Cài đặt">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <span class="sidebar-text whitespace-nowrap transition-opacity duration-300">Cài đặt</span>
                 </button>
             </nav>
         </div>
-        <div class="p-4 bg-slate-800/50 m-4 rounded-xl border border-slate-700/50 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-500/30">T</div>
-            <div class="overflow-hidden">
-                <h4 class="text-sm font-semibold text-white truncate">Đức Thành</h4>
-                <p class="text-xs text-slate-400 truncate">System Admin</p>
+        <div class="p-3 m-3 bg-slate-800/50 rounded-xl border border-slate-700/50 flex items-center gap-3 overflow-hidden">
+            <div class="w-10 h-10 shrink-0 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-500/30">T</div>
+            <div class="sidebar-text whitespace-nowrap transition-opacity duration-300">
+                <h4 class="text-sm font-semibold text-white">Đức Thành</h4>
+                <p class="text-[10px] text-slate-400 uppercase tracking-wider">System Admin</p>
             </div>
         </div>
     </aside>
 
     <main class="flex-1 flex flex-col h-screen relative">
-        <header class="h-16 bg-white/70 dark:bg-slate-900/80 backdrop-blur-lg border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 z-10 shrink-0 transition-colors duration-300">
+        <header class="h-16 bg-white/70 dark:bg-slate-900/80 backdrop-blur-lg border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 z-10 shrink-0 transition-colors duration-300">
             <div class="flex items-center gap-4">
+                <!-- Nút 3 gạch thu gọn Sidebar -->
+                <button onclick="app.toggleSidebar()" class="p-2 -ml-2 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+                
                 <div id="api-status" class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-3 py-1.5 rounded-full text-xs font-semibold border border-slate-200 dark:border-slate-700 transition-colors">
                     <span class="w-2 h-2 rounded-full bg-slate-400"></span> Đang kết nối...
                 </div>
@@ -235,6 +244,12 @@
                 </div>
             </div>
 
+            <div id="tab-portal" class="space-y-6 max-w-4xl mx-auto hidden">
+                <!-- Giao diện Cổng Tra cứu sẽ được tích hợp tại đây -->
+                <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Cổng Tra cứu Sinh viên</h1>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Giao diện cho phép sinh viên tự tra cứu lịch sử điểm danh của mình.</p>
+            </div>
+
             <div id="tab-settings" class="space-y-6 max-w-4xl mx-auto hidden">
                 <div>
                     <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Cài đặt Hệ thống</h1>
@@ -285,6 +300,7 @@
             doughnut: null,
             lastLogCount: 0,
             allStudents: [],
+            isSidebarCollapsed: false,
 
             init() {
                 // Set Dark mode mặc định theo máy tính
@@ -307,6 +323,26 @@
                 this.doughnut.update();
             },
 
+            toggleSidebar() {
+                this.isSidebarCollapsed = !this.isSidebarCollapsed;
+                const sidebar = document.getElementById('sidebar');
+                const texts = document.querySelectorAll('.sidebar-text');
+
+                if (this.isSidebarCollapsed) {
+                    sidebar.classList.replace('w-64', 'w-20');
+                    texts.forEach(t => { 
+                        t.classList.add('opacity-0', 'w-0');
+                        setTimeout(() => t.classList.add('hidden'), 300); // Ẩn hẳn sau khi transition kết thúc
+                    });
+                } else {
+                    sidebar.classList.replace('w-20', 'w-64');
+                    texts.forEach(t => { 
+                        t.classList.remove('hidden');
+                        setTimeout(() => t.classList.remove('opacity-0', 'w-0'), 10);
+                    });
+                }
+            },
+
             async fetchHealth() {
                 try {
                     const res = await fetch(`${API_URL}/health`);
@@ -320,16 +356,20 @@
 
             // Quản lý Tab
             switchTab(tab) {
+                // Ẩn/Hiện nội dung các tab
                 document.getElementById('tab-dashboard').style.display = tab === 'dashboard' ? 'block' : 'none';
                 document.getElementById('tab-students').style.display = tab === 'students' ? 'block' : 'none';
                 document.getElementById('tab-settings').style.display = tab === 'settings' ? 'block' : 'none';
+                document.getElementById('tab-portal').style.display = tab === 'portal' ? 'block' : 'none';
                 
-                const activeClass = "w-full flex items-center gap-3 bg-indigo-500/10 text-indigo-300 px-4 py-3 rounded-xl font-semibold transition-all duration-300 border border-indigo-500/30";
-                const inactiveClass = "w-full flex items-center gap-3 text-slate-400 hover:bg-slate-700/50 hover:text-white px-4 py-3 rounded-xl font-semibold transition-all duration-300";
+                // Đổi class nút menu
+                const activeClass = "w-full flex items-center gap-3 bg-indigo-500/10 text-indigo-300 px-3 py-3 rounded-xl font-semibold transition-all duration-300 border border-indigo-500/30 overflow-hidden";
+                const inactiveClass = "w-full flex items-center gap-3 text-slate-400 hover:bg-slate-700/50 hover:text-white px-3 py-3 rounded-xl font-medium transition-all overflow-hidden";
                 
                 document.getElementById('btn-dashboard').className = tab === 'dashboard' ? activeClass : inactiveClass;
                 document.getElementById('btn-students').className = tab === 'students' ? activeClass : inactiveClass;
                 document.getElementById('btn-settings').className = tab === 'settings' ? activeClass : inactiveClass;
+                document.getElementById('btn-portal').className = tab === 'portal' ? activeClass : inactiveClass;
 
                 if(tab === 'students') this.fetchStudents();
                 if(tab === 'settings') this.fetchShiftSettings();
@@ -543,6 +583,51 @@
                     }
                 } catch (e) {
                     this.showToast("Lỗi máy chủ khi cập nhật!", "error");
+                }
+            },
+
+            // Nâng cấp: Hàm xử lý Tra cứu cá nhân
+            async searchPersonalLog() {
+                // Lấy UID người dùng nhập vào
+                const uidInput = document.getElementById('search-portal-uid').value.trim().toUpperCase();
+                if (!uidInput) return this.showToast("Vui lòng nhập mã thẻ!", "error");
+
+                try {
+                    // Gọi API mới vừa tạo trên Backend
+                    const res = await fetch(`${API_URL}/logs/student/${uidInput}`);
+                    const data = await res.json();
+
+                    if (!res.ok) {
+                        return this.showToast(data.error || "Không tìm thấy dữ liệu!", "error");
+                    }
+
+                    // Nếu thành công, hiển thị khối kết quả lên
+                    document.getElementById('portal-result').classList.remove('hidden');
+                    
+                    // Điền tên và Streak (chuỗi đúng giờ)
+                    document.getElementById('portal-student-name').innerText = data.student.fullName;
+                    document.getElementById('portal-student-uid').innerText = `UID: ${data.student.uid} | 🔥 Đi học đúng giờ: ${data.stats.onTime} lần`;
+
+                    // Vẽ danh sách lịch sử
+                    const logList = document.getElementById('portal-log-list');
+                    if (data.logs.length === 0) {
+                        logList.innerHTML = `<li class="text-center text-slate-500 py-4">Chưa có lịch sử điểm danh</li>`;
+                    } else {
+                        logList.innerHTML = data.logs.map(log => {
+                            const timeStr = new Date(log.timestamp).toLocaleString('vi-VN');
+                            const badgeColor = log.status === "Đúng giờ" ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700';
+                            
+                            return `
+                                <li class="p-3 bg-white dark:bg-slate-900 rounded-xl flex items-center justify-between border border-slate-100 dark:border-slate-800 transition-colors">
+                                    <span class="text-sm font-medium text-slate-700 dark:text-slate-300">${timeStr}</span>
+                                    <span class="px-2 py-1 rounded text-xs font-bold uppercase ${badgeColor}">${log.status}</span>
+                                </li>
+                            `;
+                        }).join('');
+                    }
+                    this.showToast("Tra cứu thành công!");
+                } catch (e) {
+                    this.showToast("Lỗi kết nối đến máy chủ!", "error");
                 }
             },
 
