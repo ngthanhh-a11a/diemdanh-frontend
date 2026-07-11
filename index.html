@@ -31,6 +31,20 @@
 </head>
 <body class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200 flex h-screen overflow-hidden">
 
+    <!-- MÀN HÌNH LOADING TOÀN HỆ THỐNG -->
+    <div id="global-loader" class="fixed inset-0 z-[100] bg-slate-900 flex flex-col items-center justify-center transition-opacity duration-500">
+        <div class="relative flex items-center justify-center">
+            <!-- Vòng tròn xoay ngoài -->
+            <div class="absolute w-24 h-24 border-4 border-slate-700 border-t-indigo-500 rounded-full animate-spin"></div>
+            <!-- Logo bên trong -->
+            <div class="bg-indigo-600 p-3 rounded-2xl text-white z-10 shadow-lg shadow-indigo-500/50">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            </div>
+        </div>
+        <h2 class="mt-8 text-white text-xl font-bold tracking-widest animate-pulse">NTTU RFID</h2>
+        <p class="text-slate-400 text-sm mt-2">Đang khởi tạo hệ thống...</p>
+    </div>
+
     <aside id="sidebar" class="w-64 bg-slate-900 text-slate-300 flex flex-col justify-between shrink-0 shadow-2xl z-20 hidden md:flex transition-all duration-300 ease-in-out">
         <div>
             <div class="h-16 flex items-center px-5 border-b border-slate-800">
@@ -244,10 +258,37 @@
                 </div>
             </div>
 
-            <div id="tab-portal" class="space-y-6 max-w-4xl mx-auto hidden">
-                <!-- Giao diện Cổng Tra cứu sẽ được tích hợp tại đây -->
-                <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Cổng Tra cứu Sinh viên</h1>
-                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Giao diện cho phép sinh viên tự tra cứu lịch sử điểm danh của mình.</p>
+            <!-- CỔNG TRA CỨU SINH VIÊN -->
+            <div id="tab-portal" class="space-y-6 max-w-4xl mx-auto hidden pt-2">
+                <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
+                    <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Cổng Tra cứu Sinh viên</h1>
+                    <p class="text-sm text-slate-500 mt-1">Giao diện cho phép sinh viên tự tra cứu lịch sử điểm danh của mình.</p>
+                </div>
+
+                <!-- Khối nhập liệu -->
+                <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm text-center mt-6">
+                    <div class="max-w-md mx-auto space-y-4">
+                        <input type="text" id="search-portal-uid" placeholder="Nhập Mã thẻ (UID)..." class="w-full px-5 py-3 text-center text-lg font-mono bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-indigo-500 uppercase outline-none transition-all dark:text-white">
+                        <button onclick="app.searchPersonalLog()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-lg shadow-indigo-500/30">
+                            Kiểm tra thông tin
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Nơi hiển thị kết quả (Mặc định ẩn) -->
+                <div id="portal-result" class="hidden bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm overflow-hidden mt-6">
+                    <div class="p-6 border-b border-slate-200/80 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <div class="text-center sm:text-left">
+                            <h3 class="font-bold text-xl text-slate-800 dark:text-white" id="portal-student-name">Tên Sinh Viên</h3>
+                            <span class="text-sm font-mono text-slate-500" id="portal-student-uid">UID: 0000</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <ul id="portal-log-list" class="space-y-3 max-h-96 overflow-y-auto pr-2">
+                            <!-- Dữ liệu log của sinh viên sẽ được Javascript chèn vào đây -->
+                        </ul>
+                    </div>
+                </div>
             </div>
 
             <div id="tab-settings" class="space-y-6 max-w-4xl mx-auto hidden">
@@ -302,19 +343,33 @@
             allStudents: [],
             isSidebarCollapsed: false,
 
-            init() {
-                // Set Dark mode mặc định theo máy tính
+            async init() {
+                // Set Dark mode mặc định
                 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                     document.documentElement.classList.add('dark');
                 }
+                
                 document.getElementById('date-filter').valueAsDate = new Date();
                 this.initClock();
                 this.initChart();
                 this.initDoughnut();
-                this.fetchLogs();
-                this.fetchHealth(); // Kích hoạt System Health
+
+                // Đợi tải xong toàn bộ dữ liệu lần đầu tiên từ API rồi mới cho phép vào web
+                await Promise.all([
+                    this.fetchLogs(),
+                    this.fetchHealth()
+                ]);
+
+                // Xử lý hiệu ứng mờ dần và ẩn màn hình Loading
+                const loader = document.getElementById('global-loader');
+                loader.classList.add('opacity-0'); // Bắt đầu hiệu ứng mờ
+                setTimeout(() => {
+                    loader.classList.add('hidden'); // Ẩn hoàn toàn sau 0.5s
+                }, 500);
+
+                // Khởi động các bộ đếm vòng lặp chạy ngầm (Polling)
                 setInterval(() => this.fetchLogs(), 2000);
-                setInterval(() => this.fetchHealth(), 5000); // Cập nhật sức khỏe mỗi 5s
+                setInterval(() => this.fetchHealth(), 5000);
             },
 
             toggleDarkMode() {
