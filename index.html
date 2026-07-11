@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,16 +8,27 @@
     <script>
         tailwind.config = {
             darkMode: 'class',
-            theme: { extend: {} }
+            theme: { 
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Geist Mono', 'monospace'], // Using a modern mono font if available
+                    },
+                } 
+            }
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #3f3f46; }
         
         /* Hiệu ứng Toast Notification */
         .toast-enter { animation: slideInRight 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; }
@@ -29,214 +40,222 @@
         @keyframes fadeOut { to { opacity: 0; } }
     </style>
 </head>
-<body class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200 flex h-screen overflow-hidden">
+<body class="bg-white dark:bg-[#09090b] text-zinc-900 dark:text-zinc-300 flex h-screen overflow-hidden antialiased">
 
     <!-- MÀN HÌNH LOADING TOÀN HỆ THỐNG -->
-    <div id="global-loader" class="fixed inset-0 z-[100] bg-slate-900 flex flex-col items-center justify-center transition-opacity duration-500">
+    <div id="global-loader" class="fixed inset-0 z-[100] bg-[#09090b] flex flex-col items-center justify-center transition-opacity duration-500">
         <div class="relative flex items-center justify-center">
             <!-- Vòng tròn xoay ngoài -->
-            <div class="absolute w-24 h-24 border-4 border-slate-700 border-t-indigo-500 rounded-full animate-spin"></div>
+            <div class="absolute w-24 h-24 border-4 border-zinc-800 border-t-zinc-400 rounded-full animate-spin"></div>
             <!-- Logo bên trong -->
-            <div class="bg-indigo-600 p-3 rounded-2xl text-white z-10 shadow-lg shadow-indigo-500/50">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            <div class="bg-zinc-900 p-3 rounded-2xl text-white z-10 border border-zinc-800">
+                <svg class="w-8 h-8 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
             </div>
         </div>
-        <h2 class="mt-8 text-white text-xl font-bold tracking-widest animate-pulse">NTTU RFID</h2>
-        <p class="text-slate-400 text-sm mt-2">Đang khởi tạo hệ thống...</p>
+        <h2 class="mt-8 text-zinc-100 text-xl font-bold tracking-widest animate-pulse">NTTU RFID</h2>
+        <p class="text-zinc-500 text-sm mt-2">Đang khởi tạo hệ thống...</p>
     </div>
 
-    <aside id="sidebar" class="w-64 bg-slate-950 border-r border-slate-800/60 text-slate-300 flex flex-col justify-between shrink-0 z-20 hidden md:flex transition-all duration-300 ease-in-out relative overflow-hidden">
+    <aside id="sidebar" class="w-64 bg-[#09090b] border-r border-zinc-800/80 text-zinc-400 flex flex-col justify-between shrink-0 z-20 hidden md:flex transition-all duration-300 ease-in-out relative">
         
-        <!-- Hiệu ứng ánh sáng nền mờ (Gradient Blur) chuẩn Dark Tech -->
-        <div class="absolute top-0 left-0 w-full h-32 bg-indigo-500/5 blur-[80px] pointer-events-none"></div>
-
         <div class="relative z-10">
             <!-- Khu vực Logo -->
-            <div class="h-20 flex items-center px-6 border-b border-slate-800/60">
+            <div class="h-20 flex items-center px-6">
                 <div class="flex items-center gap-3 overflow-hidden">
-                    <div class="bg-gradient-to-b from-indigo-500 to-indigo-600 p-2 rounded-xl text-white shrink-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] shadow-indigo-500/20">
+                    <div class="bg-zinc-800 p-2 rounded-lg text-zinc-300 shrink-0 border border-zinc-700/80">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
                     </div>
-                    <span class="sidebar-text text-slate-100 font-semibold text-lg tracking-tight whitespace-nowrap transition-opacity duration-300">NTTU RFID</span>
+                    <span class="sidebar-text text-zinc-100 font-semibold text-lg tracking-tight whitespace-nowrap transition-opacity duration-300">NTTU RFID</span>
                 </div>
             </div>
 
             <!-- Menu Điều hướng -->
-            <nav class="p-4 space-y-1.5 mt-2" id="nav-menu">
+            <nav class="p-4 space-y-1 mt-2" id="nav-menu">
                 <!-- Nút Đang chọn (Active) -->
-                <button onclick="app.switchTab('dashboard')" id="btn-dashboard" class="w-full flex items-center gap-3 bg-indigo-500/10 text-indigo-400 px-3.5 py-3 rounded-xl font-medium transition-all duration-300 border border-indigo-500/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] overflow-hidden group active:scale-[0.98]" title="Bảng điều khiển">
+                <button onclick="app.switchTab('dashboard')" id="btn-dashboard" class="w-full flex items-center gap-3 bg-zinc-800 text-zinc-50 px-3.5 py-2.5 rounded-lg font-medium transition-all duration-300 active:scale-[0.98]" title="Bảng điều khiển">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z"></path></svg>
                     <span class="sidebar-text whitespace-nowrap transition-opacity duration-300">Bảng điều khiển</span>
                 </button>
                 
                 <!-- Nút Không chọn (Inactive) -->
-                <button onclick="app.switchTab('students')" id="btn-students" class="w-full flex items-center gap-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800/40 px-3.5 py-3 rounded-xl font-medium transition-all duration-300 overflow-hidden group active:scale-[0.98]" title="Quản lý Thẻ & SV">
-                    <svg class="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                <button onclick="app.switchTab('students')" id="btn-students" class="w-full flex items-center gap-3 text-zinc-400 hover:text-zinc-50 hover:bg-zinc-800/50 px-3.5 py-2.5 rounded-lg font-medium transition-all duration-300 active:scale-[0.98]" title="Quản lý Thẻ & SV">
+                    <svg class="w-5 h-5 shrink-0 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                     <span class="sidebar-text whitespace-nowrap transition-opacity duration-300">Quản lý Thẻ & SV</span>
                 </button>
                 
-                <button onclick="app.switchTab('portal')" id="btn-portal" class="w-full flex items-center gap-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800/40 px-3.5 py-3 rounded-xl font-medium transition-all duration-300 overflow-hidden group active:scale-[0.98]" title="Cổng Tra cứu">
-                    <svg class="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <button onclick="app.switchTab('portal')" id="btn-portal" class="w-full flex items-center gap-3 text-zinc-400 hover:text-zinc-50 hover:bg-zinc-800/50 px-3.5 py-2.5 rounded-lg font-medium transition-all duration-300 active:scale-[0.98]" title="Cổng Tra cứu">
+                    <svg class="w-5 h-5 shrink-0 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     <span class="sidebar-text whitespace-nowrap transition-opacity duration-300">Cổng Tra cứu</span>
                 </button>
                 
-                <button onclick="app.switchTab('settings')" id="btn-settings" class="w-full flex items-center gap-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800/40 px-3.5 py-3 rounded-xl font-medium transition-all duration-300 overflow-hidden group active:scale-[0.98]" title="Cài đặt">
-                    <svg class="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                <button onclick="app.switchTab('settings')" id="btn-settings" class="w-full flex items-center gap-3 text-zinc-400 hover:text-zinc-50 hover:bg-zinc-800/50 px-3.5 py-2.5 rounded-lg font-medium transition-all duration-300 active:scale-[0.98]" title="Cài đặt">
+                    <svg class="w-5 h-5 shrink-0 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                     <span class="sidebar-text whitespace-nowrap transition-opacity duration-300">Cài đặt</span>
                 </button>
             </nav>
         </div>
 
         <!-- Khu vực Hồ sơ Quản trị viên -->
-        <div class="p-4 relative z-10 mb-2 mx-2">
-            <div class="p-3 bg-slate-900/50 hover:bg-slate-800/80 rounded-2xl border border-slate-800/80 flex items-center gap-3 overflow-hidden cursor-pointer transition-all duration-300 active:scale-[0.98]">
-                <div class="w-10 h-10 shrink-0 rounded-full bg-gradient-to-tr from-indigo-500 to-indigo-600 flex items-center justify-center text-white font-medium shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] text-sm">T</div>
+        <div class="p-4 relative z-10">
+            <div class="p-2.5 bg-zinc-900 hover:bg-zinc-800/80 rounded-lg border border-zinc-800 flex items-center gap-3 overflow-hidden cursor-pointer transition-all duration-300 active:scale-[0.98]">
+                <div class="w-9 h-9 shrink-0 rounded-md bg-zinc-700 flex items-center justify-center text-zinc-300 font-medium text-sm">T</div>
                 <div class="sidebar-text whitespace-nowrap transition-opacity duration-300">
-                    <h4 class="text-sm font-medium text-slate-200 tracking-tight">Đức Thành</h4>
-                    <p class="text-[10px] text-slate-500 uppercase tracking-widest font-mono mt-0.5">System Admin</p>
+                    <h4 class="text-sm font-medium text-zinc-200 tracking-tight">Đức Thành</h4>
+                    <p class="text-[10px] text-zinc-500 uppercase tracking-widest font-mono mt-0.5">System Admin</p>
                 </div>
             </div>
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col h-screen relative">
-        <header class="h-20 bg-slate-950/80 backdrop-blur-2xl border-b border-slate-800/60 flex items-center justify-between px-8 z-10 shrink-0 transition-colors duration-300 shadow-[inset_0_-1px_0_rgba(255,255,255,0.02)]">
-            <div class="flex items-center gap-6">
-                <!-- Nút Thu gọn Sidebar -->
-                <button onclick="app.toggleSidebar()" class="p-2 -ml-2 text-slate-400 hover:text-white rounded-xl transition-all active:scale-[0.98]">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                </button>
-                
-                <!-- Trạng thái Kết nối -->
-                <div id="api-status" class="flex items-center gap-2.5 bg-slate-900 text-emerald-400 px-4 py-2 rounded-full text-xs font-semibold border border-emerald-500/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span class="tracking-wide">SYSTEM ONLINE</span>
-                </div>
-                
-                <!-- Chỉ số Sức khỏe Server (Monospace) -->
-                <div id="sys-health" class="hidden sm:flex items-center gap-4 text-[11px] font-mono text-slate-500 tracking-widest uppercase">
-                    <span class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m14-6h2m-2 6h2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg> RAM: <b id="health-ram" class="text-slate-300 text-xs">0</b> MB</span>
-                    <span class="w-1 h-1 bg-slate-700 rounded-full"></span>
-                    <span class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> UPTIME: <b id="health-uptime" class="text-slate-300 text-xs">0</b> S</span>
-                </div>
-            </div>
+    <main class="flex-1 flex flex-col h-screen relative bg-white dark:bg-zinc-950">
+        <header class="relative h-20 bg-white/80 dark:bg-zinc-950/70 backdrop-blur-xl border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between px-8 z-10 shrink-0 transition-colors duration-300 overflow-hidden">
+            <!-- Aurora Effect -->
+            <div class="absolute top-0 left-0 -translate-x-1/2 w-96 h-full bg-zinc-400/5 dark:bg-zinc-500/5 blur-[100px] pointer-events-none"></div>
             
-            <div class="flex items-center gap-6">
-                <!-- Nút Dark Mode -->
-                <button onclick="app.toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-indigo-400 hover:border-indigo-500/30 transition-all active:scale-[0.98] shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]">
-                    <svg id="icon-moon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                    <svg id="icon-sun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                </button>
-                <div class="text-right flex flex-col justify-center">
-                    <p id="live-clock" class="text-sm font-mono font-bold text-slate-200 tracking-wider">00:00:00</p>
-                    <p id="live-date" class="text-[10px] uppercase font-mono text-slate-500 tracking-widest mt-0.5">--/--/----</p>
+            <div class="relative z-10 flex items-center justify-between w-full">
+                <div class="flex items-center gap-6">
+                    <!-- Nút Thu gọn Sidebar -->
+                    <button onclick="app.toggleSidebar()" class="p-2 -ml-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white rounded-lg transition-all active:scale-[0.95]">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                    
+                    <!-- Trạng thái Kết nối -->
+                    <div id="api-status" class="flex items-center gap-2.5 bg-green-50 dark:bg-green-950/50 text-green-700 dark:text-green-400 px-3 py-1.5 rounded-full text-xs font-semibold border border-green-200 dark:border-green-500/20">
+                        <span class="w-2 h-2 rounded-full bg-green-500 dark:bg-green-400 animate-pulse"></span>
+                        <span class="tracking-wide font-mono">SYSTEM ONLINE</span>
+                    </div>
+                    
+                    <!-- Chỉ số Sức khỏe Server (Monospace) -->
+                    <div id="sys-health" class="hidden sm:flex items-center gap-4 text-[11px] font-mono text-zinc-500 tracking-widest uppercase">
+                        <span class="flex items-center gap-1.5">RAM: <b id="health-ram" class="text-zinc-800 dark:text-zinc-300 text-xs font-semibold">0</b> MB</span>
+                        <span class="w-1 h-1 bg-zinc-300 dark:bg-zinc-700 rounded-full"></span>
+                        <span class="flex items-center gap-1.5">UPTIME: <b id="health-uptime" class="text-zinc-800 dark:text-zinc-300 text-xs font-semibold">0</b> S</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-6">
+                    <!-- Nút Dark Mode -->
+                    <button onclick="app.toggleDarkMode()" class="p-2.5 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 transition-all active:scale-[0.95]">
+                        <svg id="icon-moon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                        <svg id="icon-sun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    </button>
+                    <div class="text-right flex flex-col justify-center">
+                        <p id="live-clock" class="text-sm font-mono font-semibold text-zinc-800 dark:text-zinc-200 tracking-wider">00:00:00</p>
+                        <p id="live-date" class="text-[10px] uppercase font-mono text-zinc-500 tracking-widest mt-0.5">--/--/----</p>
+                    </div>
                 </div>
             </div>
         </header>
 
         <div class="flex-1 overflow-y-auto p-8 relative">
             
-            <div id="toast-container" class="fixed top-20 right-8 z-50 flex flex-col gap-2"></div>
+            <div id="toast-container" class="fixed top-24 right-8 z-50 flex flex-col gap-2"></div>
 
-            <div id="tab-dashboard" class="space-y-6 max-w-7xl mx-auto block">
+            <div id="tab-dashboard" class="space-y-8 max-w-7xl mx-auto block">
                 
-                <div class="flex flex-col sm:flex-row justify-between sm:items-end gap-2 border-b border-slate-200 dark:border-slate-700 pb-4">
+                <div class="flex flex-col sm:flex-row justify-between sm:items-end gap-4 border-b border-zinc-200 dark:border-zinc-800 pb-6">
                     <div>
-                        <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Tổng quan hệ thống</h1>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Phân tích dữ liệu điểm danh theo thời gian thực</p>
+                        <h1 class="text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">Tổng quan hệ thống</h1>
+                        <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Phân tích dữ liệu điểm danh theo thời gian thực.</p>
                     </div>
-                    <!-- Bộ lọc Ngày tháng -->
                     <div class="flex items-center gap-3">
-                        <input type="date" id="date-filter" onchange="app.fetchLogs()" class="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-indigo-500 font-medium text-slate-600 dark:text-slate-300 shadow-sm cursor-pointer outline-none transition-all">
+                        <input type="date" id="date-filter" onchange="app.fetchLogs()" class="px-4 py-2 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-zinc-500 font-medium text-zinc-600 dark:text-zinc-300 shadow-sm cursor-pointer outline-none transition-all text-sm">
                         
-                        <button onclick="window.location.href = `${API_URL}/report/excel`" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-300 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <button onclick="window.location.href = `${API_URL}/report/excel`" class="flex items-center gap-2 bg-zinc-100 dark:bg-zinc-800/80 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-300 font-semibold py-2 px-4 rounded-lg transition-all duration-300 border border-zinc-200 dark:border-zinc-700/80 active:scale-95 text-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                             <span>Xuất Excel</span>
                         </button>
                     </div>
                 </div>
 
                 <!-- KHỐI THỐNG KÊ (BENTO 2.0) -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     
                     <!-- Thẻ Tổng Lượt Quét -->
-                    <div class="relative bg-slate-900/60 p-8 rounded-[2.5rem] border border-slate-800/80 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)] overflow-hidden group">
-                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-40"></div>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="bg-indigo-500/10 p-3 rounded-2xl border border-indigo-500/20 text-indigo-400 shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    <div class="group relative bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 transition-all duration-300 hover:border-zinc-300 dark:hover:border-zinc-700 overflow-hidden">
+                        <div class="absolute inset-0 bg-zinc-400/5 dark:bg-zinc-500/5 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                        <div class="relative z-10">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="bg-zinc-100 dark:bg-zinc-800 p-3 rounded-lg border border-zinc-200 dark:border-zinc-700/80 text-zinc-500 dark:text-zinc-400">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                </div>
                             </div>
+                            <h3 class="text-sm font-medium text-zinc-500 dark:text-zinc-400 tracking-wide mb-1">Tổng lượt quét</h3>
+                            <p class="text-4xl font-mono font-semibold text-zinc-900 dark:text-zinc-100 tracking-tighter" id="stat-total">0</p>
                         </div>
-                        <h3 class="text-sm font-medium text-slate-400 tracking-wide mb-1">Tổng lượt quét</h3>
-                        <p class="text-4xl font-mono font-medium text-slate-100 tracking-tighter" id="stat-total">0</p>
                     </div>
 
                     <!-- Thẻ Đúng Giờ -->
-                    <div class="relative bg-slate-900/60 p-8 rounded-[2.5rem] border border-slate-800/80 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)] overflow-hidden group">
-                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-40"></div>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="bg-emerald-500/10 p-3 rounded-2xl border border-emerald-500/20 text-emerald-400 shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <div class="group relative bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 transition-all duration-300 hover:border-zinc-300 dark:hover:border-zinc-700 overflow-hidden">
+                        <div class="absolute inset-0 bg-green-400/10 dark:bg-green-500/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                        <div class="relative z-10">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="bg-green-50 dark:bg-green-950/50 p-3 rounded-lg border border-green-200 dark:border-green-500/20 text-green-600 dark:text-green-400">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
                             </div>
+                            <h3 class="text-sm font-medium text-zinc-500 dark:text-zinc-400 tracking-wide mb-1">Đúng giờ</h3>
+                            <p class="text-4xl font-mono font-semibold text-zinc-900 dark:text-zinc-100 tracking-tighter" id="stat-ontime">0</p>
                         </div>
-                        <h3 class="text-sm font-medium text-slate-400 tracking-wide mb-1">Đúng giờ</h3>
-                        <p class="text-4xl font-mono font-medium text-slate-100 tracking-tighter" id="stat-ontime">0</p>
                     </div>
 
                     <!-- Thẻ Đi Muộn -->
-                    <div class="relative bg-slate-900/60 p-8 rounded-[2.5rem] border border-slate-800/80 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)] overflow-hidden group">
-                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent opacity-40"></div>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="bg-amber-500/10 p-3 rounded-2xl border border-amber-500/20 text-amber-400 shadow-[inset_0_1px_0_rgba(255,255,255,0.02)]">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <div class="group relative bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 transition-all duration-300 hover:border-zinc-300 dark:hover:border-zinc-700 overflow-hidden">
+                        <div class="absolute inset-0 bg-amber-400/10 dark:bg-amber-500/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                        <div class="relative z-10">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="bg-amber-50 dark:bg-amber-950/50 p-3 rounded-lg border border-amber-200 dark:border-amber-500/20 text-amber-600 dark:text-amber-400">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
                             </div>
+                            <h3 class="text-sm font-medium text-zinc-500 dark:text-zinc-400 tracking-wide mb-1">Đi muộn</h3>
+                            <p class="text-4xl font-mono font-semibold text-zinc-900 dark:text-zinc-100 tracking-tighter" id="stat-late">0</p>
                         </div>
-                        <h3 class="text-sm font-medium text-slate-400 tracking-wide mb-1">Đi muộn</h3>
-                        <p class="text-4xl font-mono font-medium text-slate-100 tracking-tighter" id="stat-late">0</p>
                     </div>
 
                     <!-- Thẻ Lạ Cảnh Báo -->
-                    <div class="relative bg-slate-900/60 p-8 rounded-[2.5rem] border border-slate-800/80 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)] overflow-hidden group">
-                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-rose-500 to-transparent opacity-50"></div>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="bg-rose-500/10 p-3 rounded-2xl border border-rose-500/20 text-rose-500 shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] animate-pulse">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    <div class="group relative bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 transition-all duration-300 hover:border-zinc-300 dark:hover:border-zinc-700 overflow-hidden">
+                        <div class="absolute inset-0 bg-red-400/10 dark:bg-red-500/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                        <div class="relative z-10">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="bg-red-50 dark:bg-red-950/50 p-3 rounded-lg border border-red-200 dark:border-red-500/20 text-red-600 dark:text-red-400 animate-pulse">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                </div>
                             </div>
+                            <h3 class="text-sm font-medium text-zinc-500 dark:text-zinc-400 tracking-wide mb-1">Thẻ lạ cảnh báo</h3>
+                            <p class="text-4xl font-mono font-semibold text-red-600 dark:text-red-400 tracking-tighter" id="stat-unknown">0</p>
                         </div>
-                        <h3 class="text-sm font-medium text-slate-400 tracking-wide mb-1">Thẻ lạ cảnh báo</h3>
-                        <p class="text-4xl font-mono font-medium text-rose-500 tracking-tighter" id="stat-unknown">0</p>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     
                     <!-- Biểu đồ Đường (Chiếm 2 cột) -->
-                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm lg:col-span-2">
-                        <h3 class="font-bold text-slate-800 dark:text-slate-100 mb-4">Mật độ quẹt thẻ trong ngày</h3>
+                    <div class="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 lg:col-span-2">
+                        <h3 class="font-semibold text-zinc-900 dark:text-zinc-100 mb-4">Mật độ quẹt thẻ trong ngày</h3>
                         <div class="h-64 w-full">
                             <canvas id="attendanceChart"></canvas>
                         </div>
                     </div>
 
                     <!-- Biểu đồ Tròn (Chiếm 1 cột) -->
-                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm flex flex-col h-full">
-                        <h3 class="font-bold text-slate-800 dark:text-slate-100 mb-4">Tỷ lệ Chuyên cần</h3>
+                    <div class="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 flex flex-col h-full">
+                        <h3 class="font-semibold text-zinc-900 dark:text-zinc-100 mb-4">Tỷ lệ Chuyên cần</h3>
                         <div class="flex-1 w-full flex justify-center items-center relative min-h-[220px]">
                             <canvas id="doughnutChart"></canvas>
-                            <!-- Nhãn text nằm chính giữa tâm biểu đồ tròn -->
                             <div class="absolute flex flex-col items-center justify-center pointer-events-none">
-                                <span class="text-3xl font-bold text-slate-800 dark:text-slate-100" id="donut-total">0</span>
-                                <span class="text-xs text-slate-500 dark:text-slate-400">Lượt</span>
+                                <span class="text-3xl font-mono font-semibold text-zinc-900 dark:text-zinc-100" id="donut-total">0</span>
+                                <span class="text-xs text-zinc-500 dark:text-zinc-400 font-medium">Lượt</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Bảng Log dời xuống dưới biểu đồ -->
-                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm flex flex-col h-[330px] mt-6">
-                    <div class="p-5 border-b border-slate-200/80 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50 rounded-t-2xl">
-                        <h3 class="font-bold text-slate-800 dark:text-slate-100">Log mới nhất</h3>
-                        <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 flex flex-col h-[330px] mt-6">
+                    <div class="p-5 border-b border-zinc-200 dark:border-zinc-800 flex justify-between items-center">
+                        <h3 class="font-semibold text-zinc-900 dark:text-zinc-100">Log mới nhất</h3>
+                        <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
                     </div>
                     <div class="flex-1 overflow-y-auto p-2">
                         <ul id="mini-log-list" class="space-y-1"></ul>
@@ -246,54 +265,51 @@
 
             <div id="tab-students" class="space-y-6 max-w-7xl mx-auto hidden">
                 <div>
-                    <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Quản lý Định danh</h1>
-                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Đăng ký thông tin thẻ RFID và danh sách sinh viên nội bộ.</p>
+                    <h1 class="text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">Quản lý Định danh</h1>
+                    <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Đăng ký thông tin thẻ RFID và danh sách sinh viên nội bộ.</p>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm lg:col-span-1 h-fit sticky top-8">
-                        <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-4">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                        </div>
-                        <h3 class="font-bold text-slate-800 dark:text-slate-100 text-lg mb-4">Đăng ký thẻ mới</h3>
+                    <div class="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 lg:col-span-1 h-fit sticky top-8">
+                        <h3 class="font-semibold text-zinc-900 dark:text-zinc-100 text-lg mb-4">Đăng ký thẻ mới</h3>
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Mã Thẻ (UID)</label>
-                                <input type="text" id="reg-uid" placeholder="Quẹt thẻ hoặc nhập..." class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:bg-white dark:focus:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-300 font-mono uppercase dark:text-slate-200 dark:placeholder-slate-400">
+                                <label class="block text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-1.5">Mã Thẻ (UID)</label>
+                                <input type="text" id="reg-uid" placeholder="Quẹt thẻ hoặc nhập..." class="w-full px-4 py-2 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:bg-white dark:focus:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:border-transparent transition-all duration-200 font-mono uppercase dark:text-zinc-200 dark:placeholder-zinc-500">
                             </div>
                             <div>
-                                <label class="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Họ và Tên</label>
-                                <input type="text" id="reg-name" placeholder="Nguyễn Văn A" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:bg-white dark:focus:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-300 dark:text-slate-200 dark:placeholder-slate-400">
+                                <label class="block text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-1.5">Họ và Tên</label>
+                                <input type="text" id="reg-name" placeholder="Nguyễn Văn A" class="w-full px-4 py-2 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:bg-white dark:focus:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:border-transparent transition-all duration-200 dark:text-zinc-200 dark:placeholder-zinc-500">
                             </div>
-                            <button onclick="app.registerStudent()" class="w-full bg-slate-900 dark:bg-indigo-600 hover:bg-indigo-700 dark:hover:bg-indigo-500 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 mt-2 shadow-lg shadow-indigo-500/10 hover:shadow-indigo-500/20">
+                            <button onclick="app.registerStudent()" class="w-full bg-zinc-900 dark:bg-zinc-50 hover:bg-zinc-700 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 font-semibold py-3 px-4 rounded-lg transition-all duration-300 mt-2 active:scale-95">
                                 Ghi nhận hệ thống
                             </button>
                         </div>
                     </div>
 
-                    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm lg:col-span-2 overflow-hidden">
-                        <div class="p-6 border-b border-slate-200/80 dark:border-slate-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50/50 dark:bg-slate-800/50">
+                    <div class="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 lg:col-span-2 overflow-hidden">
+                        <div class="p-6 border-b border-zinc-200 dark:border-zinc-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                             <div class="flex items-center gap-3">
-                                <h3 class="font-bold text-slate-800 dark:text-slate-100">Danh sách Thẻ hợp lệ</h3>
-                                <span id="student-count" class="bg-indigo-100 text-indigo-700 py-1 px-3 rounded-full text-xs font-bold">0</span>
+                                <h3 class="font-semibold text-zinc-900 dark:text-zinc-100">Danh sách Thẻ hợp lệ</h3>
+                                <span id="student-count" class="bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 py-1 px-3 rounded-full text-xs font-bold font-mono">0</span>
                             </div>
-                            <!-- Ô Tìm kiếm -->
                             <div class="relative w-full sm:w-64">
-                                <input type="text" id="search-student" oninput="app.filterStudents(this.value)" placeholder="Tìm tên hoặc mã UID..." class="w-full pl-10 pr-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-indigo-500 text-sm dark:text-slate-200 dark:placeholder-slate-400">
-                                <svg class="w-4 h-4 absolute left-3 top-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                <input type="text" id="search-student" oninput="app.filterStudents(this.value)" placeholder="Tìm tên hoặc mã UID..." class="w-full pl-10 pr-4 py-2 bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-zinc-500 text-sm dark:text-zinc-200 dark:placeholder-zinc-500">
+                                <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                             </div>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left">
-                                <thead class="bg-slate-50/70 dark:bg-slate-700/50 border-b border-slate-200/80 dark:border-slate-700 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                                <thead class="border-b border-zinc-200 dark:border-zinc-800 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                                     <tr>
-                                        <th class="py-4 px-6">Mã UID</th>
-                                        <th class="py-4 px-6">Định danh Sinh viên</th>
-                                        <th class="py-4 px-6">Ngày cấp</th>
+                                        <th class="py-3 px-6 font-mono">Mã UID</th>
+                                        <th class="py-3 px-6">Định danh Sinh viên</th>
+                                        <th class="py-3 px-6">Ngày cấp</th>
+                                        <th class="py-3 px-6 text-right">Hành động</th>
                                     </tr>
                                 </thead>
-                                <tbody id="student-list-body" class="text-sm divide-y divide-slate-100 dark:divide-slate-700">
-                                    </tbody>
+                                <tbody id="student-list-body" class="text-sm divide-y divide-zinc-100 dark:divide-zinc-800">
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -302,32 +318,29 @@
 
             <!-- CỔNG TRA CỨU SINH VIÊN -->
             <div id="tab-portal" class="space-y-6 max-w-4xl mx-auto hidden pt-2">
-                <div class="border-b border-slate-200 dark:border-slate-800 pb-4">
-                    <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Cổng Tra cứu Sinh viên</h1>
-                    <p class="text-sm text-slate-500 mt-1">Giao diện cho phép sinh viên tự tra cứu lịch sử điểm danh của mình.</p>
+                <div class="border-b border-zinc-200 dark:border-zinc-800 pb-4">
+                    <h1 class="text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">Cổng Tra cứu Sinh viên</h1>
+                    <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Giao diện cho phép sinh viên tự tra cứu lịch sử điểm danh của mình.</p>
                 </div>
 
-                <!-- Khối nhập liệu -->
-                <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm text-center mt-6">
+                <div class="bg-white dark:bg-zinc-900 p-8 rounded-2xl border border-zinc-200 dark:border-zinc-800 text-center mt-6">
                     <div class="max-w-md mx-auto space-y-4">
-                        <input type="text" id="search-portal-uid" placeholder="Nhập Mã thẻ (UID)..." class="w-full px-5 py-3 text-center text-lg font-mono bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-indigo-500 uppercase outline-none transition-all dark:text-white">
-                        <button onclick="app.searchPersonalLog()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-lg shadow-indigo-500/30">
+                        <input type="text" id="search-portal-uid" placeholder="Nhập Mã thẻ (UID)..." class="w-full px-5 py-3 text-center text-lg font-mono bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-zinc-500 uppercase outline-none transition-all dark:text-white">
+                        <button onclick="app.searchPersonalLog()" class="w-full bg-zinc-900 dark:bg-zinc-50 hover:bg-zinc-700 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 font-semibold py-3 px-4 rounded-lg transition-all duration-300 active:scale-95">
                             Kiểm tra thông tin
                         </button>
                     </div>
                 </div>
 
-                <!-- Nơi hiển thị kết quả (Mặc định ẩn) -->
-                <div id="portal-result" class="hidden bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm overflow-hidden mt-6">
-                    <div class="p-6 border-b border-slate-200/80 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div id="portal-result" class="hidden bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden mt-6">
+                    <div class="p-6 border-b border-zinc-200 dark:border-zinc-800 flex flex-col sm:flex-row justify-between items-center gap-4">
                         <div class="text-center sm:text-left">
-                            <h3 class="font-bold text-xl text-slate-800 dark:text-white" id="portal-student-name">Tên Sinh Viên</h3>
-                            <span class="text-sm font-mono text-slate-500" id="portal-student-uid">UID: 0000</span>
+                            <h3 class="font-semibold text-xl text-zinc-800 dark:text-white" id="portal-student-name">Tên Sinh Viên</h3>
+                            <span class="text-sm font-mono text-zinc-500" id="portal-student-uid">UID: 0000</span>
                         </div>
                     </div>
                     <div class="p-6">
                         <ul id="portal-log-list" class="space-y-3 max-h-96 overflow-y-auto pr-2">
-                            <!-- Dữ liệu log của sinh viên sẽ được Javascript chèn vào đây -->
                         </ul>
                     </div>
                 </div>
@@ -335,35 +348,35 @@
 
             <div id="tab-settings" class="space-y-6 max-w-4xl mx-auto hidden">
                 <div>
-                    <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Cài đặt Hệ thống</h1>
-                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Thiết lập các tham số vận hành cho hệ thống điểm danh.</p>
+                    <h1 class="text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">Cài đặt Hệ thống</h1>
+                    <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Thiết lập các tham số vận hành cho hệ thống điểm danh.</p>
                 </div>
 
-                <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm">
-                    <h3 class="font-bold text-slate-800 dark:text-slate-100 text-lg mb-1">Cấu hình Ca làm việc</h3>
-                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Quy định về thời gian điểm danh hợp lệ.</p>
+                <div class="bg-white dark:bg-zinc-900 p-8 rounded-2xl border border-zinc-200 dark:border-zinc-800">
+                    <h3 class="font-semibold text-zinc-900 dark:text-zinc-100 text-lg mb-1">Cấu hình Ca làm việc</h3>
+                    <p class="text-sm text-zinc-500 dark:text-zinc-400 mb-6">Quy định về thời gian điểm danh hợp lệ.</p>
                     
                     <div class="space-y-5">
                         <div>
-                            <label for="set-shiftName" class="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Tên ca</label>
-                            <input type="text" id="set-shiftName" placeholder="VD: Ca Sáng, Giờ Hành chính..." class="w-full max-w-md px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:bg-white dark:focus:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-300 dark:text-slate-200 dark:placeholder-slate-400">
+                            <label for="set-shiftName" class="block text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-1.5">Tên ca</label>
+                            <input type="text" id="set-shiftName" placeholder="VD: Ca Sáng, Giờ Hành chính..." class="w-full max-w-md px-4 py-2 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:bg-white dark:focus:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:border-transparent transition-all duration-200 dark:text-zinc-200 dark:placeholder-zinc-500">
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
                             <div>
-                                <label for="set-startTime" class="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Giờ vào</label>
-                                <input type="time" id="set-startTime" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:bg-white dark:focus:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-300 dark:text-slate-200">
+                                <label for="set-startTime" class="block text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-1.5">Giờ vào</label>
+                                <input type="time" id="set-startTime" class="w-full px-4 py-2 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:bg-white dark:focus:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:border-transparent transition-all duration-200 dark:text-zinc-200 font-mono">
                             </div>
                             <div>
-                                <label for="set-endTime" class="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Giờ tan</label>
-                                <input type="time" id="set-endTime" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:bg-white dark:focus:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-300 dark:text-slate-200">
+                                <label for="set-endTime" class="block text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-1.5">Giờ tan</label>
+                                <input type="time" id="set-endTime" class="w-full px-4 py-2 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:bg-white dark:focus:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:border-transparent transition-all duration-200 dark:text-zinc-200 font-mono">
                             </div>
                             <div>
-                                <label for="set-lateThreshold" class="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Phút đi trễ cho phép</label>
-                                <input type="number" id="set-lateThreshold" placeholder="VD: 15" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:bg-white dark:focus:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-300 dark:text-slate-200 dark:placeholder-slate-400">
+                                <label for="set-lateThreshold" class="block text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-1.5">Phút đi trễ cho phép</label>
+                                <input type="number" id="set-lateThreshold" placeholder="VD: 15" class="w-full px-4 py-2 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:bg-white dark:focus:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:border-transparent transition-all duration-200 dark:text-zinc-200 dark:placeholder-zinc-500 font-mono">
                             </div>
                         </div>
                         <div class="pt-4">
-                            <button onclick="app.saveShiftSettings()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 px-6 rounded-xl transition-all duration-300 shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30">
+                            <button onclick="app.saveShiftSettings()" class="bg-zinc-900 dark:bg-zinc-50 hover:bg-zinc-700 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 font-semibold py-2.5 px-6 rounded-lg transition-all duration-300 active:scale-95">
                                 Lưu thay đổi
                             </button>
                         </div>
@@ -387,7 +400,9 @@
 
             async init() {
                 // Set Dark mode mặc định
-                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                if (!localStorage.getItem('theme')) {
+                    document.documentElement.classList.add('dark');
+                } else if (localStorage.getItem('theme') === 'dark') {
                     document.documentElement.classList.add('dark');
                 }
                 
@@ -396,26 +411,29 @@
                 this.initChart();
                 this.initDoughnut();
 
-                // Đợi tải xong toàn bộ dữ liệu lần đầu tiên từ API rồi mới cho phép vào web
                 await Promise.all([
                     this.fetchLogs(),
                     this.fetchHealth()
                 ]);
 
-                // Xử lý hiệu ứng mờ dần và ẩn màn hình Loading
                 const loader = document.getElementById('global-loader');
-                loader.classList.add('opacity-0'); // Bắt đầu hiệu ứng mờ
+                loader.classList.add('opacity-0');
                 setTimeout(() => {
-                    loader.classList.add('hidden'); // Ẩn hoàn toàn sau 0.5s
+                    loader.classList.add('hidden');
                 }, 500);
 
-                // Khởi động các bộ đếm vòng lặp chạy ngầm (Polling)
                 setInterval(() => this.fetchLogs(), 2000);
                 setInterval(() => this.fetchHealth(), 5000);
             },
 
             toggleDarkMode() {
-                document.documentElement.classList.toggle('dark');
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                }
                 this.chart.update();
                 this.doughnut.update();
             },
@@ -429,7 +447,7 @@
                     sidebar.classList.replace('w-64', 'w-20');
                     texts.forEach(t => { 
                         t.classList.add('opacity-0', 'w-0');
-                        setTimeout(() => t.classList.add('hidden'), 300); // Ẩn hẳn sau khi transition kết thúc
+                        setTimeout(() => t.classList.add('hidden'), 300);
                     });
                 } else {
                     sidebar.classList.replace('w-20', 'w-64');
@@ -442,7 +460,7 @@
 
             async fetchHealth() {
                 try {
-                    const res = await fetch(`${API_URL}/health`);
+                    const res = await fetch(`/health`);
                     const data = await res.json();
                     document.getElementById('health-ram').innerText = data.memory;
                     document.getElementById('health-uptime').innerText = data.uptime;
@@ -451,17 +469,14 @@
                 }
             },
 
-            // Quản lý Tab
             switchTab(tab) {
-                // Ẩn/Hiện nội dung các tab
                 document.getElementById('tab-dashboard').style.display = tab === 'dashboard' ? 'block' : 'none';
                 document.getElementById('tab-students').style.display = tab === 'students' ? 'block' : 'none';
                 document.getElementById('tab-settings').style.display = tab === 'settings' ? 'block' : 'none';
                 document.getElementById('tab-portal').style.display = tab === 'portal' ? 'block' : 'none';
                 
-                // Đổi class nút menu
-                const activeClass = "w-full flex items-center gap-3 bg-indigo-500/10 text-indigo-400 px-3.5 py-3 rounded-xl font-medium transition-all duration-300 border border-indigo-500/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] overflow-hidden group active:scale-[0.98]";
-                const inactiveClass = "w-full flex items-center gap-3 text-slate-400 hover:text-slate-100 hover:bg-slate-800/40 px-3.5 py-3 rounded-xl font-medium transition-all duration-300 overflow-hidden group active:scale-[0.98]";
+                const activeClass = "w-full flex items-center gap-3 bg-zinc-800 text-zinc-50 px-3.5 py-2.5 rounded-lg font-medium transition-all duration-300 active:scale-[0.98]";
+                const inactiveClass = "w-full flex items-center gap-3 text-zinc-400 hover:text-zinc-50 hover:bg-zinc-800/50 px-3.5 py-2.5 rounded-lg font-medium transition-all duration-300 active:scale-[0.98]";
                 
                 document.getElementById('btn-dashboard').className = tab === 'dashboard' ? activeClass : inactiveClass;
                 document.getElementById('btn-students').className = tab === 'students' ? activeClass : inactiveClass;
@@ -472,15 +487,18 @@
                 if(tab === 'settings') this.fetchShiftSettings();
             },
 
-            // Hệ thống hiển thị thông báo góc
             showToast(message, type = 'success') {
                 const container = document.getElementById('toast-container');
                 const toast = document.createElement('div');
-                const colors = type === 'success' ? 'bg-emerald-500 border-emerald-600' : 'bg-rose-500 border-rose-600';
-                const icon = type === 'success' ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>' : '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
+                const colors = type === 'success' 
+                    ? 'bg-white dark:bg-zinc-900 border-green-500 text-green-600 dark:text-green-400' 
+                    : 'bg-white dark:bg-zinc-900 border-red-500 text-red-600 dark:text-red-400';
+                const icon = type === 'success' 
+                    ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>' 
+                    : '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
                 
-                toast.className = `toast-enter flex items-center gap-3 px-5 py-3 rounded-xl text-white font-semibold shadow-lg border-b-4 ${colors}`;
-                toast.innerHTML = `${icon}<span>${message}</span>`;
+                toast.className = `toast-enter flex items-center gap-3 px-5 py-3 rounded-lg shadow-2xl border-l-4 `;
+                toast.innerHTML = `<span class="font-semibold"></span>`;
                 
                 container.appendChild(toast);
                 setTimeout(() => {
@@ -489,38 +507,36 @@
                 }, 3000);
             },
 
-            // Cập nhật huy hiệu trạng thái API
             updateConnectionStatus(isOnline) {
                 const badge = document.getElementById('api-status');
                 if (isOnline) {
-                    badge.className = "flex items-center gap-2 bg-emerald-100 text-emerald-700 px-3 py-1.5 rounded-full text-xs font-bold border border-emerald-200 transition-colors";
-                    badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Đã kết nối DB`;
+                    badge.className = "flex items-center gap-2.5 bg-green-50 dark:bg-green-950/50 text-green-700 dark:text-green-400 px-3 py-1.5 rounded-full text-xs font-semibold border border-green-200 dark:border-green-500/20";
+                    badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-green-500 dark:bg-green-400 animate-pulse"></span><span class="tracking-wide font-mono">SYSTEM ONLINE</span>`;
                 } else {
-                    badge.className = "flex items-center gap-2 bg-rose-100 text-rose-700 px-3 py-1.5 rounded-full text-xs font-bold border border-rose-200 transition-colors";
-                    badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500"></span> Mất kết nối`;
+                    badge.className = "flex items-center gap-2.5 bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-400 px-3 py-1.5 rounded-full text-xs font-semibold border border-red-200 dark:border-red-500/20";
+                    badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500"></span><span class="tracking-wide font-mono">CONNECTION LOST</span>`;
                 }
             },
 
-            // Vẽ biểu đồ
             initChart() {
                 const ctx = document.getElementById('attendanceChart').getContext('2d');
                 this.chart = new Chart(ctx, {
                     type: 'line',
                     data: {
-                        labels: Array.from({length: 24}, (_, i) => `${i}h`),
+                        labels: Array.from({length: 24}, (_, i) => `h`),
                         datasets: [{
                             label: 'Lượt quét',
                             data: new Array(24).fill(0),
-                            borderColor: '#6366f1',
-                            backgroundColor: 'rgba(99, 102, 241, 0.05)',
+                            borderColor: '#a1a1aa', // zinc-400
+                            backgroundColor: () => document.documentElement.classList.contains('dark') ? 'rgba(161, 161, 170, 0.05)' : 'rgba(200, 200, 200, 0.1)',
                             borderWidth: 2,
                             fill: true,
                             tension: 0.4,
-                            pointBackgroundColor: '#6366f1',
-                            pointBorderColor: '#fff',
-                            pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: '#6366f1',
-                            pointRadius: 4,
+                            pointBackgroundColor: '#a1a1aa',
+                            pointBorderColor: () => document.documentElement.classList.contains('dark') ? '#09090b' : '#fff',
+                            pointHoverBackgroundColor: () => document.documentElement.classList.contains('dark') ? '#09090b' : '#fff',
+                            pointHoverBorderColor: '#a1a1aa',
+                            pointRadius: 0,
                             pointHoverRadius: 6,
                         }]
                     },
@@ -528,8 +544,8 @@
                         responsive: true, maintainAspectRatio: false, 
                         plugins: { legend: { display: false } },
                         scales: { 
-                            y: { beginAtZero: true, grid: { color: () => document.documentElement.classList.contains('dark') ? '#334155' : '#e2e8f0' }, ticks: { color: () => document.documentElement.classList.contains('dark') ? '#94a3b8' : '#64748b' } }, 
-                            x: { grid: { display: false }, ticks: { color: () => document.documentElement.classList.contains('dark') ? '#94a3b8' : '#64748b' } } 
+                            y: { beginAtZero: true, grid: { color: () => document.documentElement.classList.contains('dark') ? '#27272a' : '#f4f4f5' }, ticks: { color: () => document.documentElement.classList.contains('dark') ? '#71717a' : '#a1a1aa' } }, 
+                            x: { grid: { display: false }, ticks: { color: () => document.documentElement.classList.contains('dark') ? '#71717a' : '#a1a1aa' } } 
                         }
                     }
                 });
@@ -543,9 +559,9 @@
                         labels: ['Đúng giờ', 'Đi muộn', 'Thẻ lạ'],
                         datasets: [{
                             data: [0, 0, 0],
-                            backgroundColor: ['#10B981', '#F59E0B', '#F43F5E'], // Mã màu khớp với thẻ
+                            backgroundColor: ['#22c55e', '#f59e0b', '#ef4444'], // green, amber, red
                             borderWidth: 0,
-                            hoverOffset: 4
+                            hoverOffset: 8
                         }]
                     },
                     options: {
@@ -553,28 +569,22 @@
                         plugins: { 
                             legend: { 
                                 position: 'bottom', 
-                                labels: { usePointStyle: true, padding: 15, font: { size: 11 }, color: () => document.documentElement.classList.contains('dark') ? '#cbd5e1' : '#475569' } 
+                                labels: { usePointStyle: true, padding: 20, font: { size: 12, family: 'Inter' }, color: () => document.documentElement.classList.contains('dark') ? '#a1a1aa' : '#52525b' } 
                             } 
                         }
                     }
                 });
             },
 
-            // Lấy log từ API
-            // Lấy log từ API (Bản vá SQA: Cập nhật UI chuẩn xác)
             async fetchLogs() {
                 try {
-                    // Lấy ngày đang chọn trên giao diện
                     const selectedDate = document.getElementById('date-filter').value;
-                    
-                    // Nối thêm tham số date vào URL để báo Backend lọc
-                    const res = await fetch(`${API_URL}/logs?date=${selectedDate}`);
+                    const res = await fetch(`/logs?date=`);
                     if(!res.ok) throw new Error();
                     const data = await res.json();
                     
                     this.updateConnectionStatus(true);
 
-                    // Chuyển dữ liệu thành chuỗi để so sánh. Nếu có bất kỳ sự thay đổi nhỏ nào (Tên, Trạng thái), bắt buộc vẽ lại UI
                     const currentDataString = JSON.stringify(data);
                     if (currentDataString !== this.lastDataString) {
                         this.lastDataString = currentDataString;
@@ -585,10 +595,9 @@
                 }
             },  
 
-            // Đã nâng cấp: Cập nhật Empty State
             async fetchStudents() {
                 try {
-                    const res = await fetch(`${API_URL}/students`);
+                    const res = await fetch(`/students`);
                     this.allStudents = await res.json();
                     this.renderStudentTable(this.allStudents);
                 } catch (e) { console.log("Lỗi tải SV"); }
@@ -604,38 +613,36 @@
             },
 
             renderStudentTable(data) {
-                document.getElementById('student-count').innerText = `${data.length} người`;
+                document.getElementById('student-count').innerText = `${data.length}`;
                 const tbody = document.getElementById('student-list-body');
                 
-                // Trạng thái Empty State (Không có dữ liệu)
                 if (data.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="3" class="py-10 text-center text-slate-500 dark:text-slate-400 font-medium">
-                        <svg class="w-12 h-12 mx-auto text-slate-300 dark:text-slate-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+                    tbody.innerHTML = `<tr><td colspan="4" class="py-16 text-center text-zinc-500 dark:text-zinc-400 font-medium">
+                        <svg class="w-12 h-12 mx-auto text-zinc-300 dark:text-zinc-700 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
                         Không tìm thấy dữ liệu sinh viên nào.
                     </td></tr>`;
                     return;
                 }
 
                 tbody.innerHTML = data.map(st => `
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors duration-200">
-                        <td class="py-4 px-6 font-mono text-xs font-semibold text-slate-500 dark:text-slate-400">${st.uid}</td>
-                        <td class="py-4 px-6 font-bold text-slate-800 dark:text-slate-100">${st.fullName}</td>
-                        <td class="py-4 px-6 text-sm text-slate-500 dark:text-slate-400 flex items-center justify-between">
-                            <span>${new Date(st.registeredAt).toLocaleDateString('vi-VN')}</span>
-                            <button onclick="app.editStudent('${st.uid}', '${st.fullName}')" class="text-indigo-600 hover:text-indigo-800 font-bold px-3 py-1 bg-indigo-50 dark:bg-indigo-900/50 dark:hover:bg-indigo-900 hover:bg-indigo-100 rounded-md transition-colors text-xs border border-indigo-200">Sửa</button>
+                    <tr class="hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors duration-200">
+                        <td class="py-4 px-6 font-mono text-xs font-semibold text-zinc-500 dark:text-zinc-400">${st.uid}</td>
+                        <td class="py-4 px-6 font-semibold text-zinc-800 dark:text-zinc-100">${st.fullName}</td>
+                        <td class="py-4 px-6 text-sm text-zinc-500 dark:text-zinc-400">${new Date(st.registeredAt).toLocaleDateString('vi-VN')}</td>
+                        <td class="py-4 px-6 text-right">
+                            <button onclick="app.editStudent('${st.uid}', '${st.fullName}')" class="text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-50 font-semibold px-3 py-1 bg-zinc-100 dark:bg-zinc-800 dark:hover:bg-zinc-700 hover:bg-zinc-200 rounded-md transition-colors text-xs border border-zinc-200 dark:border-zinc-700 active:scale-95">Sửa</button>
                         </td>
                     </tr>
                 `).join('');
             },
 
-            // Đẩy SV mới lên API
             async registerStudent() {
                 const uid = document.getElementById('reg-uid').value.trim();
                 const name = document.getElementById('reg-name').value.trim();
                 if (!uid || !name) return this.showToast("Vui lòng điền đủ thông tin!", "error");
 
                 try {
-                    const res = await fetch(`${API_URL}/students`, {
+                    const res = await fetch(`/students`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ uid, fullName: name })
@@ -645,7 +652,7 @@
                         this.showToast("Đăng ký thẻ thành công!");
                         document.getElementById('reg-uid').value = '';
                         document.getElementById('reg-name').value = '';
-                        this.fetchStudents(); // Cập nhật lại bảng
+                        this.fetchStudents();
                     } else {
                         const err = await res.json();
                         this.showToast(err.error, "error");
@@ -655,16 +662,13 @@
                 }
             },
 
-            // Sửa tên sinh viên
             async editStudent(uid, currentName) {
-                // Hiển thị hộp thoại nhập tên mới nhanh gọn
-                const newName = prompt(`Sửa tên định danh cho mã thẻ ${uid}:`, currentName);
+                const newName = prompt(`Sửa tên định danh cho mã thẻ :`, currentName);
                 
-                // Kiểm tra nếu người dùng bấm Cancel hoặc để trống
                 if (newName === null || newName.trim() === "" || newName === currentName) return;
 
                 try {
-                    const res = await fetch(`${API_URL}/students/${uid}`, {
+                    const res = await fetch(`/students/`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ fullName: newName.trim() })
@@ -672,8 +676,8 @@
                     
                     if (res.ok) {
                         this.showToast("Cập nhật tên thành công!");
-                        this.fetchStudents(); // Tải lại bảng sinh viên
-                        this.fetchLogs(); // Tải lại bảng Dashboard để đổi tên ngay lập tức
+                        this.fetchStudents();
+                        this.fetchLogs();
                     } else {
                         const err = await res.json();
                         this.showToast(err.error, "error");
@@ -683,41 +687,34 @@
                 }
             },
 
-            // Nâng cấp: Hàm xử lý Tra cứu cá nhân
             async searchPersonalLog() {
-                // Lấy UID người dùng nhập vào
                 const uidInput = document.getElementById('search-portal-uid').value.trim().toUpperCase();
                 if (!uidInput) return this.showToast("Vui lòng nhập mã thẻ!", "error");
 
                 try {
-                    // Gọi API mới vừa tạo trên Backend
-                    const res = await fetch(`${API_URL}/logs/student/${uidInput}`);
+                    const res = await fetch(`/logs/student/`);
                     const data = await res.json();
 
                     if (!res.ok) {
                         return this.showToast(data.error || "Không tìm thấy dữ liệu!", "error");
                     }
 
-                    // Nếu thành công, hiển thị khối kết quả lên
                     document.getElementById('portal-result').classList.remove('hidden');
-                    
-                    // Điền tên và Streak (chuỗi đúng giờ)
                     document.getElementById('portal-student-name').innerText = data.student.fullName;
                     document.getElementById('portal-student-uid').innerText = `UID: ${data.student.uid} | 🔥 Đi học đúng giờ: ${data.stats.onTime} lần`;
 
-                    // Vẽ danh sách lịch sử
                     const logList = document.getElementById('portal-log-list');
                     if (data.logs.length === 0) {
-                        logList.innerHTML = `<li class="text-center text-slate-500 py-4">Chưa có lịch sử điểm danh</li>`;
+                        logList.innerHTML = `<li class="text-center text-zinc-500 py-4">Chưa có lịch sử điểm danh</li>`;
                     } else {
                         logList.innerHTML = data.logs.map(log => {
                             const timeStr = new Date(log.timestamp).toLocaleString('vi-VN');
-                            const badgeColor = log.status === "Đúng giờ" ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700';
+                            const badgeColor = log.status === "Đúng giờ" ? 'bg-green-50 dark:bg-green-950/50 text-green-700 dark:text-green-400 border-green-500/20' : 'bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400 border-amber-500/20';
                             
                             return `
-                                <li class="p-3 bg-white dark:bg-slate-900 rounded-xl flex items-center justify-between border border-slate-100 dark:border-slate-800 transition-colors">
-                                    <span class="text-sm font-medium text-slate-700 dark:text-slate-300">${timeStr}</span>
-                                    <span class="px-2 py-1 rounded text-xs font-bold uppercase ${badgeColor}">${log.status}</span>
+                                <li class="p-3 bg-white dark:bg-zinc-800/50 rounded-lg flex items-center justify-between border border-zinc-200 dark:border-zinc-800 transition-colors">
+                                    <span class="text-sm font-medium text-zinc-700 dark:text-zinc-300 font-mono"></span>
+                                    <span class="px-2 py-1 rounded text-xs font-bold uppercase  border">${log.status}</span>
                                 </li>
                             `;
                         }).join('');
@@ -728,10 +725,9 @@
                 }
             },
 
-            // Lấy cấu hình ca làm việc
             async fetchShiftSettings() {
                 try {
-                    const res = await fetch(`${API_URL}/settings/shift`);
+                    const res = await fetch(`/settings/shift`);
                     if (!res.ok) throw new Error('Cannot fetch settings');
                     const settings = await res.json();
                     
@@ -745,7 +741,6 @@
                 }
             },
 
-            // Lưu cấu hình ca làm việc
             async saveShiftSettings() {
                 const settings = {
                     shiftName: document.getElementById('set-shiftName').value,
@@ -755,7 +750,7 @@
                 };
 
                 try {
-                    const res = await fetch(`${API_URL}/settings/shift`, {
+                    const res = await fetch(`/settings/shift`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(settings)
@@ -780,22 +775,21 @@
                     const d = new Date(log.timestamp);
                     hourlyData[d.getHours()]++;
 
-                    // Render 10 dòng log mới nhất ra màn hình
                     if(index < 10) {
                         const timeStr = d.toLocaleTimeString('vi-VN');
                         const isUnknown = log.status === "Chưa đăng ký";
-                        const nameColor = isUnknown ? 'text-rose-500' : 'text-slate-800 dark:text-slate-100';
-                        const badgeColor = log.status === "Đúng giờ" ? 'bg-emerald-100 text-emerald-700' : (isUnknown ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-700');
+                        const nameColor = isUnknown ? 'text-red-500 dark:text-red-400' : 'text-zinc-800 dark:text-zinc-100';
+                        const badgeColor = log.status === "Đúng giờ" ? 'bg-green-50 dark:bg-green-950/50 text-green-700 dark:text-green-400' : (isUnknown ? 'bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-400' : 'bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400');
 
                         miniLogHTML.push(`
-                            <li class="p-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-xl flex items-center justify-between transition-colors duration-200">
+                            <li class="p-3 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 rounded-lg flex items-center justify-between transition-colors duration-200">
                                 <div>
-                                    <p class="font-bold text-sm ${nameColor}">${log.fullName || 'Thẻ lạ'}</p>
-                                    <p class="text-xs text-slate-400 dark:text-slate-500 font-mono mt-0.5">UID: ${log.uid}</p>
+                                    <p class="font-semibold text-sm ">${log.fullName || 'Thẻ lạ'}</p>
+                                    <p class="text-xs text-zinc-500 dark:text-zinc-500 font-mono mt-0.5">UID: ${log.uid}</p>
                                 </div>
                                 <div class="text-right">
-                                    <span class="px-2 py-1 rounded text-[10px] font-bold uppercase ${badgeColor}">${log.status}</span>
-                                    <p class="text-[11px] text-slate-400 mt-1">${timeStr}</p>
+                                    <span class="px-2 py-1 rounded text-[10px] font-bold uppercase ">${log.status}</span>
+                                    <p class="text-[11px] text-zinc-400 mt-1 font-mono"></p>
                                 </div>
                             </li>
                         `);
@@ -809,11 +803,9 @@
                 
                 document.getElementById('mini-log-list').innerHTML = miniLogHTML.join('');
 
-                // Update Chart
                 this.chart.data.datasets[0].data = hourlyData; 
                 this.chart.update();
 
-                // Cập nhật dữ liệu cho Biểu đồ Tròn
                 this.doughnut.data.datasets[0].data = [onTime, late, unknown];
                 this.doughnut.update();
                 document.getElementById('donut-total').innerText = logs.length;
@@ -822,13 +814,12 @@
             initClock() {
                 setInterval(() => {
                     const now = new Date();
-                    document.getElementById('live-clock').innerText = now.toLocaleTimeString('vi-VN');
+                    document.getElementById('live-clock').innerText = now.toLocaleTimeString('vi-VN', { hour12: false });
                     document.getElementById('live-date').innerText = now.toLocaleDateString('vi-VN');
                 }, 1000);
             }
         };
 
-        // Kích hoạt ứng dụng khi trang tải xong
         window.onload = () => app.init();
     </script>
 </body>
