@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NTTU Smart Attendance | Admin Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: {} }
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -60,16 +66,26 @@
     </aside>
 
     <main class="flex-1 flex flex-col h-screen relative">
-        <header class="h-16 bg-white/70 backdrop-blur-lg border-b border-slate-200 flex items-center justify-between px-8 z-10 shrink-0">
-            <div class="flex items-center gap-3">
-                <div id="api-status" class="flex items-center gap-2 bg-slate-100 text-slate-600 px-3 py-1.5 rounded-full text-xs font-semibold border border-slate-200 transition-colors">
+        <header class="h-16 bg-white/70 dark:bg-slate-900/80 backdrop-blur-lg border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 z-10 shrink-0 transition-colors duration-300">
+            <div class="flex items-center gap-4">
+                <div id="api-status" class="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-3 py-1.5 rounded-full text-xs font-semibold border border-slate-200 dark:border-slate-700 transition-colors">
                     <span class="w-2 h-2 rounded-full bg-slate-400"></span> Đang kết nối...
                 </div>
+                <!-- Cảm biến System Health -->
+                <div id="sys-health" class="hidden sm:flex items-center gap-3 text-xs font-mono text-slate-500 dark:text-slate-400">
+                    <span>RAM: <b id="health-ram">0</b>MB</span> | 
+                    <span>UPTIME: <b id="health-uptime">0</b>s</span>
+                </div>
             </div>
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-5">
+                <!-- Nút Dark Mode -->
+                <button onclick="app.toggleDarkMode()" class="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-indigo-100 dark:hover:bg-indigo-900 transition-colors">
+                    <svg id="icon-moon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    <svg id="icon-sun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                </button>
                 <div class="text-right">
-                    <p id="live-clock" class="text-sm font-bold text-slate-800">00:00:00</p>
-                    <p id="live-date" class="text-xs text-slate-500 font-medium">--/--/----</p>
+                    <p id="live-clock" class="text-sm font-bold text-slate-800 dark:text-white">00:00:00</p>
+                    <p id="live-date" class="text-xs text-slate-500 dark:text-slate-400 font-medium">--/--/----</p>
                 </div>
             </div>
         </header>
@@ -191,9 +207,16 @@
                     </div>
 
                     <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm lg:col-span-2 overflow-hidden">
-                        <div class="p-6 border-b border-slate-200/80 flex justify-between items-center bg-slate-50/50">
-                            <h3 class="font-bold text-slate-800">Danh sách Thẻ hợp lệ</h3>
-                            <span id="student-count" class="bg-indigo-100 text-indigo-700 py-1 px-3 rounded-full text-xs font-bold">0 người</span>
+                        <div class="p-6 border-b border-slate-200/80 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50/50">
+                            <div class="flex items-center gap-3">
+                                <h3 class="font-bold text-slate-800">Danh sách Thẻ hợp lệ</h3>
+                                <span id="student-count" class="bg-indigo-100 text-indigo-700 py-1 px-3 rounded-full text-xs font-bold">0</span>
+                            </div>
+                            <!-- Ô Tìm kiếm -->
+                            <div class="relative w-full sm:w-64">
+                                <input type="text" id="search-student" oninput="app.filterStudents(this.value)" placeholder="Tìm tên hoặc mã UID..." class="w-full pl-10 pr-4 py-2 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 text-sm">
+                                <svg class="w-4 h-4 absolute left-3 top-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            </div>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left">
@@ -261,16 +284,36 @@
             chart: null,
             doughnut: null,
             lastLogCount: 0,
+            allStudents: [],
 
             init() {
-                // Set ngày mặc định cho thanh Date Picker là ngày hôm nay
+                // Set Dark mode mặc định theo máy tính
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.documentElement.classList.add('dark');
+                }
                 document.getElementById('date-filter').valueAsDate = new Date();
-
                 this.initClock();
                 this.initChart();
-                this.initDoughnut(); // Gọi hàm vẽ biểu đồ tròn
+                this.initDoughnut();
                 this.fetchLogs();
-                setInterval(() => this.fetchLogs(), 2000); // Polling mỗi 2s
+                this.fetchHealth(); // Kích hoạt System Health
+                setInterval(() => this.fetchLogs(), 2000);
+                setInterval(() => this.fetchHealth(), 5000); // Cập nhật sức khỏe mỗi 5s
+            },
+
+            toggleDarkMode() {
+                document.documentElement.classList.toggle('dark');
+            },
+
+            async fetchHealth() {
+                try {
+                    const res = await fetch(`${API_URL}/health`);
+                    const data = await res.json();
+                    document.getElementById('health-ram').innerText = data.memory;
+                    document.getElementById('health-uptime').innerText = data.uptime;
+                } catch (e) {
+                    document.getElementById('health-ram').innerText = "ERR";
+                }
             },
 
             // Quản lý Tab
@@ -394,29 +437,47 @@
                 }
             },  
 
-            // Lấy danh sách sinh viên
+            // Đã nâng cấp: Cập nhật Empty State
             async fetchStudents() {
                 try {
                     const res = await fetch(`${API_URL}/students`);
-                    const data = await res.json();
-                    
-                    document.getElementById('student-count').innerText = `${data.length} người`;
-                    const tbody = document.getElementById('student-list-body');
-                    tbody.innerHTML = data.map(st => `
-                        <tr class="hover:bg-slate-50 transition-colors duration-200">
-                            <td class="py-4 px-6 font-mono text-xs font-semibold text-slate-500">${st.uid}</td>
-                            <td class="py-4 px-6 font-bold text-slate-800">${st.fullName}</td>
-                            <td class="py-4 px-6 text-sm text-slate-500 flex items-center justify-between">
-                                <span>${new Date(st.registeredAt).toLocaleDateString('vi-VN')}</span>
-                                <button onclick="app.editStudent('${st.uid}', '${st.fullName}')" class="text-indigo-600 hover:text-indigo-800 font-bold px-3 py-1 bg-indigo-50 hover:bg-indigo-100 rounded-md transition-colors duration-200 text-xs border border-indigo-200">
-                                    Sửa Tên
-                                </button>
-                            </td>
-                        </tr>
-                    `).join('');
-                } catch (e) {
-                    console.log("Chưa có API lấy danh sách SV");
+                    this.allStudents = await res.json();
+                    this.renderStudentTable(this.allStudents);
+                } catch (e) { console.log("Lỗi tải SV"); }
+            },
+
+            filterStudents(keyword) {
+                const lowerKw = keyword.toLowerCase();
+                const filtered = this.allStudents.filter(st => 
+                    st.fullName.toLowerCase().includes(lowerKw) || 
+                    st.uid.toLowerCase().includes(lowerKw)
+                );
+                this.renderStudentTable(filtered);
+            },
+
+            renderStudentTable(data) {
+                document.getElementById('student-count').innerText = `${data.length} người`;
+                const tbody = document.getElementById('student-list-body');
+                
+                // Trạng thái Empty State (Không có dữ liệu)
+                if (data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="3" class="py-10 text-center text-slate-500 font-medium">
+                        <svg class="w-12 h-12 mx-auto text-slate-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+                        Không tìm thấy dữ liệu sinh viên nào.
+                    </td></tr>`;
+                    return;
                 }
+
+                tbody.innerHTML = data.map(st => `
+                    <tr class="hover:bg-slate-50 transition-colors duration-200">
+                        <td class="py-4 px-6 font-mono text-xs font-semibold text-slate-500">${st.uid}</td>
+                        <td class="py-4 px-6 font-bold text-slate-800">${st.fullName}</td>
+                        <td class="py-4 px-6 text-sm text-slate-500 flex items-center justify-between">
+                            <span>${new Date(st.registeredAt).toLocaleDateString('vi-VN')}</span>
+                            <button onclick="app.editStudent('${st.uid}', '${st.fullName}')" class="text-indigo-600 hover:text-indigo-800 font-bold px-3 py-1 bg-indigo-50 hover:bg-indigo-100 rounded-md transition-colors text-xs border border-indigo-200">Sửa</button>
+                        </td>
+                    </tr>
+                `).join('');
             },
 
             // Đẩy SV mới lên API
