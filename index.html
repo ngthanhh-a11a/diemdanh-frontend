@@ -80,15 +80,20 @@
 
             <div id="tab-dashboard" class="space-y-6 max-w-7xl mx-auto block">
                 
-                <div class="flex flex-col sm:flex-row justify-between sm:items-end gap-2">
+                <div class="flex flex-col sm:flex-row justify-between sm:items-end gap-2 border-b border-slate-200 pb-4">
                     <div>
                         <h1 class="text-2xl font-bold text-slate-900">Tổng quan hệ thống</h1>
                         <p class="text-sm text-slate-500 mt-1">Phân tích dữ liệu điểm danh theo thời gian thực</p>
                     </div>
-                    <button onclick="window.location.href = `${API_URL}/report/excel`" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-300 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                        <span>Xuất Excel</span>
-                    </button>
+                    <!-- Bộ lọc Ngày tháng -->
+                    <div class="flex items-center gap-3">
+                        <input type="date" id="date-filter" onchange="app.fetchLogs()" class="px-4 py-2 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 font-medium text-slate-600 shadow-sm cursor-pointer outline-none transition-all">
+                        
+                        <button onclick="window.location.href = `${API_URL}/report/excel`" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-300 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            <span>Xuất Excel</span>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -124,6 +129,7 @@
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     
+                    <!-- Biểu đồ Đường (Chiếm 2 cột) -->
                     <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm lg:col-span-2">
                         <h3 class="font-bold text-slate-800 mb-4">Mật độ quẹt thẻ trong ngày</h3>
                         <div class="h-64 w-full">
@@ -131,15 +137,28 @@
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm flex flex-col h-[330px]">
-                        <div class="p-5 border-b border-slate-200/80 flex justify-between items-center bg-slate-50/50 rounded-t-2xl">
-                            <h3 class="font-bold text-slate-800">Log mới nhất</h3>
-                            <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                    <!-- Biểu đồ Tròn (Chiếm 1 cột) -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col h-full">
+                        <h3 class="font-bold text-slate-800 mb-4">Tỷ lệ Chuyên cần</h3>
+                        <div class="flex-1 w-full flex justify-center items-center relative min-h-[220px]">
+                            <canvas id="doughnutChart"></canvas>
+                            <!-- Nhãn text nằm chính giữa tâm biểu đồ tròn -->
+                            <div class="absolute flex flex-col items-center justify-center pointer-events-none">
+                                <span class="text-3xl font-bold text-slate-800" id="donut-total">0</span>
+                                <span class="text-xs text-slate-500">Lượt</span>
+                            </div>
                         </div>
-                        <div class="flex-1 overflow-y-auto p-2">
-                            <ul id="mini-log-list" class="space-y-1">
-                                </ul>
-                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bảng Log dời xuống dưới biểu đồ -->
+                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm flex flex-col h-[330px] mt-6">
+                    <div class="p-5 border-b border-slate-200/80 flex justify-between items-center bg-slate-50/50 rounded-t-2xl">
+                        <h3 class="font-bold text-slate-800">Log mới nhất</h3>
+                        <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                    </div>
+                    <div class="flex-1 overflow-y-auto p-2">
+                        <ul id="mini-log-list" class="space-y-1"></ul>
                     </div>
                 </div>
             </div>
@@ -240,11 +259,16 @@
 
         const app = {
             chart: null,
+            doughnut: null,
             lastLogCount: 0,
 
             init() {
+                // Set ngày mặc định cho thanh Date Picker là ngày hôm nay
+                document.getElementById('date-filter').valueAsDate = new Date();
+
                 this.initClock();
                 this.initChart();
+                this.initDoughnut(); // Gọi hàm vẽ biểu đồ tròn
                 this.fetchLogs();
                 setInterval(() => this.fetchLogs(), 2000); // Polling mỗi 2s
             },
@@ -325,11 +349,35 @@
                 });
             },
 
+            initDoughnut() {
+                const ctx = document.getElementById('doughnutChart').getContext('2d');
+                this.doughnut = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Đúng giờ', 'Đi muộn', 'Thẻ lạ'],
+                        datasets: [{
+                            data: [0, 0, 0],
+                            backgroundColor: ['#10B981', '#F59E0B', '#F43F5E'], // Mã màu khớp với thẻ
+                            borderWidth: 0,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false, cutout: '75%',
+                        plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 15, font: { size: 11 } } } }
+                    }
+                });
+            },
+
             // Lấy log từ API
             // Lấy log từ API (Bản vá SQA: Cập nhật UI chuẩn xác)
             async fetchLogs() {
                 try {
-                    const res = await fetch(`${API_URL}/logs`);
+                    // Lấy ngày đang chọn trên giao diện
+                    const selectedDate = document.getElementById('date-filter').value;
+                    
+                    // Nối thêm tham số date vào URL để báo Backend lọc
+                    const res = await fetch(`${API_URL}/logs?date=${selectedDate}`);
                     if(!res.ok) throw new Error();
                     const data = await res.json();
                     
@@ -510,6 +558,11 @@
                 // Update Chart
                 this.chart.data.datasets[0].data = hourlyData;
                 this.chart.update();
+
+                // Cập nhật dữ liệu cho Biểu đồ Tròn
+                this.doughnut.data.datasets[0].data = [onTime, late, unknown];
+                this.doughnut.update();
+                document.getElementById('donut-total').innerText = logs.length;
             },
 
             initClock() {
