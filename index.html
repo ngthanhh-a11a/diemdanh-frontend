@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" class="dark">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -399,14 +399,16 @@
             isSidebarCollapsed: false,
 
             async init() {
-                // Set Dark mode mặc định
-                if (!localStorage.getItem('theme')) {
-                    document.documentElement.classList.add('dark');
-                } else if (localStorage.getItem('theme') === 'dark') {
+                // Áp dụng theme đã lưu, mặc định là light
+                if (localStorage.getItem('theme') === 'dark') {
                     document.documentElement.classList.add('dark');
                 }
                 
-                document.getElementById('date-filter').valueAsDate = new Date();
+                // Bù trừ múi giờ để bộ lọc ngày luôn hiển thị chuẩn giờ Local (Việt Nam)
+                const today = new Date();
+                today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+                document.getElementById('date-filter').value = today.toISOString().split('T')[0];
+
                 this.initClock();
                 this.initChart();
                 this.initDoughnut();
