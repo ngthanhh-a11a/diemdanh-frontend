@@ -460,7 +460,7 @@
 
             async fetchHealth() {
                 try {
-                    const res = await fetch(`/health`);
+                    const res = await fetch(`${API_URL}/health`);
                     const data = await res.json();
                     document.getElementById('health-ram').innerText = data.memory;
                     document.getElementById('health-uptime').innerText = data.uptime;
@@ -497,8 +497,8 @@
                     ? '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>' 
                     : '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
                 
-                toast.className = `toast-enter flex items-center gap-3 px-5 py-3 rounded-lg shadow-2xl border-l-4 `;
-                toast.innerHTML = `<span class="font-semibold"></span>`;
+                toast.className = `toast-enter flex items-center gap-3 px-5 py-3 rounded-lg shadow-2xl border-l-4 ${colors}`;
+                toast.innerHTML = `${icon}<span class="font-semibold">${message}</span>`;
                 
                 container.appendChild(toast);
                 setTimeout(() => {
@@ -523,7 +523,7 @@
                 this.chart = new Chart(ctx, {
                     type: 'line',
                     data: {
-                        labels: Array.from({length: 24}, (_, i) => `h`),
+                        labels: Array.from({length: 24}, (_, i) => `${i}h`),
                         datasets: [{
                             label: 'Lượt quét',
                             data: new Array(24).fill(0),
@@ -579,7 +579,7 @@
             async fetchLogs() {
                 try {
                     const selectedDate = document.getElementById('date-filter').value;
-                    const res = await fetch(`/logs?date=`);
+                    const res = await fetch(`${API_URL}/logs?date=${selectedDate}`);
                     if(!res.ok) throw new Error();
                     const data = await res.json();
                     
@@ -597,7 +597,7 @@
 
             async fetchStudents() {
                 try {
-                    const res = await fetch(`/students`);
+                    const res = await fetch(`${API_URL}/students`);
                     this.allStudents = await res.json();
                     this.renderStudentTable(this.allStudents);
                 } catch (e) { console.log("Lỗi tải SV"); }
@@ -642,7 +642,7 @@
                 if (!uid || !name) return this.showToast("Vui lòng điền đủ thông tin!", "error");
 
                 try {
-                    const res = await fetch(`/students`, {
+                    const res = await fetch(`${API_URL}/students`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ uid, fullName: name })
@@ -663,12 +663,12 @@
             },
 
             async editStudent(uid, currentName) {
-                const newName = prompt(`Sửa tên định danh cho mã thẻ :`, currentName);
+                const newName = prompt(`Sửa tên định danh cho mã thẻ ${uid}:`, currentName);
                 
                 if (newName === null || newName.trim() === "" || newName === currentName) return;
 
                 try {
-                    const res = await fetch(`/students/`, {
+                    const res = await fetch(`${API_URL}/students/${uid}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ fullName: newName.trim() })
@@ -692,7 +692,7 @@
                 if (!uidInput) return this.showToast("Vui lòng nhập mã thẻ!", "error");
 
                 try {
-                    const res = await fetch(`/logs/student/`);
+                    const res = await fetch(`${API_URL}/logs/student/${uidInput}`);
                     const data = await res.json();
 
                     if (!res.ok) {
@@ -713,8 +713,8 @@
                             
                             return `
                                 <li class="p-3 bg-white dark:bg-zinc-800/50 rounded-lg flex items-center justify-between border border-zinc-200 dark:border-zinc-800 transition-colors">
-                                    <span class="text-sm font-medium text-zinc-700 dark:text-zinc-300 font-mono"></span>
-                                    <span class="px-2 py-1 rounded text-xs font-bold uppercase  border">${log.status}</span>
+                                    <span class="text-sm font-medium text-zinc-700 dark:text-zinc-300 font-mono">${timeStr}</span>
+                                    <span class="px-2 py-1 rounded text-xs font-bold uppercase ${badgeColor} border">${log.status}</span>
                                 </li>
                             `;
                         }).join('');
@@ -727,7 +727,7 @@
 
             async fetchShiftSettings() {
                 try {
-                    const res = await fetch(`/settings/shift`);
+                    const res = await fetch(`${API_URL}/settings/shift`);
                     if (!res.ok) throw new Error('Cannot fetch settings');
                     const settings = await res.json();
                     
@@ -750,7 +750,7 @@
                 };
 
                 try {
-                    const res = await fetch(`/settings/shift`, {
+                    const res = await fetch(`${API_URL}/settings/shift`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(settings)
@@ -784,12 +784,12 @@
                         miniLogHTML.push(`
                             <li class="p-3 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 rounded-lg flex items-center justify-between transition-colors duration-200">
                                 <div>
-                                    <p class="font-semibold text-sm ">${log.fullName || 'Thẻ lạ'}</p>
+                                    <p class="font-semibold text-sm ${nameColor}">${log.fullName || 'Thẻ lạ'}</p>
                                     <p class="text-xs text-zinc-500 dark:text-zinc-500 font-mono mt-0.5">UID: ${log.uid}</p>
                                 </div>
                                 <div class="text-right">
-                                    <span class="px-2 py-1 rounded text-[10px] font-bold uppercase ">${log.status}</span>
-                                    <p class="text-[11px] text-zinc-400 mt-1 font-mono"></p>
+                                    <span class="px-2 py-1 rounded text-[10px] font-bold uppercase ${badgeColor}">${log.status}</span>
+                                    <p class="text-[11px] text-zinc-400 mt-1 font-mono">${timeStr}</p>
                                 </div>
                             </li>
                         `);
