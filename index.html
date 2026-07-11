@@ -14,7 +14,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        body { font-family: 'Inter', sans-serif; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
@@ -29,7 +29,7 @@
         @keyframes fadeOut { to { opacity: 0; } }
     </style>
 </head>
-<body class="text-slate-800 flex h-screen overflow-hidden">
+<body class="bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200 flex h-screen overflow-hidden">
 
     <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col justify-between shrink-0 shadow-2xl z-20 hidden md:flex">
         <div>
@@ -96,14 +96,14 @@
 
             <div id="tab-dashboard" class="space-y-6 max-w-7xl mx-auto block">
                 
-                <div class="flex flex-col sm:flex-row justify-between sm:items-end gap-2 border-b border-slate-200 pb-4">
+                <div class="flex flex-col sm:flex-row justify-between sm:items-end gap-2 border-b border-slate-200 dark:border-slate-700 pb-4">
                     <div>
-                        <h1 class="text-2xl font-bold text-slate-900">Tổng quan hệ thống</h1>
-                        <p class="text-sm text-slate-500 mt-1">Phân tích dữ liệu điểm danh theo thời gian thực</p>
+                        <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Tổng quan hệ thống</h1>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Phân tích dữ liệu điểm danh theo thời gian thực</p>
                     </div>
                     <!-- Bộ lọc Ngày tháng -->
                     <div class="flex items-center gap-3">
-                        <input type="date" id="date-filter" onchange="app.fetchLogs()" class="px-4 py-2 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 font-medium text-slate-600 shadow-sm cursor-pointer outline-none transition-all">
+                        <input type="date" id="date-filter" onchange="app.fetchLogs()" class="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-indigo-500 font-medium text-slate-600 dark:text-slate-300 shadow-sm cursor-pointer outline-none transition-all">
                         
                         <button onclick="window.location.href = `${API_URL}/report/excel`" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-300 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
@@ -113,31 +113,31 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-center gap-5">
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-center gap-5">
                         <div class="w-12 h-12 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg></div>
                         <div>
-                            <p class="text-sm font-semibold text-slate-500 mb-1">Tổng lượt quét</p>
-                            <h3 id="stat-total" class="text-3xl font-bold text-slate-800">0</h3>
+                            <p class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1">Tổng lượt quét</p>
+                            <h3 id="stat-total" class="text-3xl font-bold text-slate-800 dark:text-slate-100">0</h3>
                         </div>
                     </div>
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-center gap-5">
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-center gap-5">
                         <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
                         <div>
-                            <p class="text-sm font-semibold text-slate-500 mb-1">Đúng giờ</p>
+                            <p class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1">Đúng giờ</p>
                             <h3 id="stat-ontime" class="text-3xl font-bold text-emerald-600">0</h3>
                         </div>
                     </div>
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-center gap-5">
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-center gap-5">
                         <div class="w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center shrink-0"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
                         <div>
-                            <p class="text-sm font-semibold text-slate-500 mb-1">Đi muộn</p>
+                            <p class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1">Đi muộn</p>
                             <h3 id="stat-late" class="text-3xl font-bold text-amber-500">0</h3>
                         </div>
                     </div>
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-center gap-5">
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-center gap-5">
                         <div class="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center shrink-0"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div>
                         <div>
-                            <p class="text-sm font-semibold text-slate-500 mb-1">Thẻ lạ</p>
+                            <p class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1">Thẻ lạ</p>
                             <h3 id="stat-unknown" class="text-3xl font-bold text-rose-500">0</h3>
                         </div>
                     </div>
@@ -146,31 +146,31 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     
                     <!-- Biểu đồ Đường (Chiếm 2 cột) -->
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm lg:col-span-2">
-                        <h3 class="font-bold text-slate-800 mb-4">Mật độ quẹt thẻ trong ngày</h3>
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm lg:col-span-2">
+                        <h3 class="font-bold text-slate-800 dark:text-slate-100 mb-4">Mật độ quẹt thẻ trong ngày</h3>
                         <div class="h-64 w-full">
                             <canvas id="attendanceChart"></canvas>
                         </div>
                     </div>
 
                     <!-- Biểu đồ Tròn (Chiếm 1 cột) -->
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col h-full">
-                        <h3 class="font-bold text-slate-800 mb-4">Tỷ lệ Chuyên cần</h3>
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm flex flex-col h-full">
+                        <h3 class="font-bold text-slate-800 dark:text-slate-100 mb-4">Tỷ lệ Chuyên cần</h3>
                         <div class="flex-1 w-full flex justify-center items-center relative min-h-[220px]">
                             <canvas id="doughnutChart"></canvas>
                             <!-- Nhãn text nằm chính giữa tâm biểu đồ tròn -->
                             <div class="absolute flex flex-col items-center justify-center pointer-events-none">
-                                <span class="text-3xl font-bold text-slate-800" id="donut-total">0</span>
-                                <span class="text-xs text-slate-500">Lượt</span>
+                                <span class="text-3xl font-bold text-slate-800 dark:text-slate-100" id="donut-total">0</span>
+                                <span class="text-xs text-slate-500 dark:text-slate-400">Lượt</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Bảng Log dời xuống dưới biểu đồ -->
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm flex flex-col h-[330px] mt-6">
-                    <div class="p-5 border-b border-slate-200/80 flex justify-between items-center bg-slate-50/50 rounded-t-2xl">
-                        <h3 class="font-bold text-slate-800">Log mới nhất</h3>
+                <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm flex flex-col h-[330px] mt-6">
+                    <div class="p-5 border-b border-slate-200/80 dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50 rounded-t-2xl">
+                        <h3 class="font-bold text-slate-800 dark:text-slate-100">Log mới nhất</h3>
                         <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
                     </div>
                     <div class="flex-1 overflow-y-auto p-2">
@@ -181,53 +181,53 @@
 
             <div id="tab-students" class="space-y-6 max-w-7xl mx-auto hidden">
                 <div>
-                    <h1 class="text-2xl font-bold text-slate-900">Quản lý Định danh</h1>
-                    <p class="text-sm text-slate-500 mt-1">Đăng ký thông tin thẻ RFID và danh sách sinh viên nội bộ.</p>
+                    <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Quản lý Định danh</h1>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Đăng ký thông tin thẻ RFID và danh sách sinh viên nội bộ.</p>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm lg:col-span-1 h-fit sticky top-8">
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm lg:col-span-1 h-fit sticky top-8">
                         <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-4">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                         </div>
-                        <h3 class="font-bold text-slate-800 text-lg mb-4">Đăng ký thẻ mới</h3>
+                        <h3 class="font-bold text-slate-800 dark:text-slate-100 text-lg mb-4">Đăng ký thẻ mới</h3>
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-sm font-semibold text-slate-600 mb-1.5">Mã Thẻ (UID)</label>
-                                <input type="text" id="reg-uid" placeholder="Quẹt thẻ hoặc nhập..." class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-300 font-mono uppercase">
+                                <label class="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Mã Thẻ (UID)</label>
+                                <input type="text" id="reg-uid" placeholder="Quẹt thẻ hoặc nhập..." class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:bg-white dark:focus:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-300 font-mono uppercase dark:text-slate-200 dark:placeholder-slate-400">
                             </div>
                             <div>
-                                <label class="block text-sm font-semibold text-slate-600 mb-1.5">Họ và Tên</label>
-                                <input type="text" id="reg-name" placeholder="Nguyễn Văn A" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-300">
+                                <label class="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Họ và Tên</label>
+                                <input type="text" id="reg-name" placeholder="Nguyễn Văn A" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:bg-white dark:focus:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-300 dark:text-slate-200 dark:placeholder-slate-400">
                             </div>
-                            <button onclick="app.registerStudent()" class="w-full bg-slate-900 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 mt-2 shadow-lg shadow-indigo-500/10 hover:shadow-indigo-500/20">
+                            <button onclick="app.registerStudent()" class="w-full bg-slate-900 dark:bg-indigo-600 hover:bg-indigo-700 dark:hover:bg-indigo-500 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 mt-2 shadow-lg shadow-indigo-500/10 hover:shadow-indigo-500/20">
                                 Ghi nhận hệ thống
                             </button>
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm lg:col-span-2 overflow-hidden">
-                        <div class="p-6 border-b border-slate-200/80 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50/50">
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm lg:col-span-2 overflow-hidden">
+                        <div class="p-6 border-b border-slate-200/80 dark:border-slate-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50/50 dark:bg-slate-800/50">
                             <div class="flex items-center gap-3">
-                                <h3 class="font-bold text-slate-800">Danh sách Thẻ hợp lệ</h3>
+                                <h3 class="font-bold text-slate-800 dark:text-slate-100">Danh sách Thẻ hợp lệ</h3>
                                 <span id="student-count" class="bg-indigo-100 text-indigo-700 py-1 px-3 rounded-full text-xs font-bold">0</span>
                             </div>
                             <!-- Ô Tìm kiếm -->
                             <div class="relative w-full sm:w-64">
-                                <input type="text" id="search-student" oninput="app.filterStudents(this.value)" placeholder="Tìm tên hoặc mã UID..." class="w-full pl-10 pr-4 py-2 bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 text-sm">
+                                <input type="text" id="search-student" oninput="app.filterStudents(this.value)" placeholder="Tìm tên hoặc mã UID..." class="w-full pl-10 pr-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-indigo-500 text-sm dark:text-slate-200 dark:placeholder-slate-400">
                                 <svg class="w-4 h-4 absolute left-3 top-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                             </div>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left">
-                                <thead class="bg-slate-50/70 border-b border-slate-200/80 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                <thead class="bg-slate-50/70 dark:bg-slate-700/50 border-b border-slate-200/80 dark:border-slate-700 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                                     <tr>
                                         <th class="py-4 px-6">Mã UID</th>
                                         <th class="py-4 px-6">Định danh Sinh viên</th>
                                         <th class="py-4 px-6">Ngày cấp</th>
                                     </tr>
                                 </thead>
-                                <tbody id="student-list-body" class="text-sm divide-y divide-slate-100">
+                                <tbody id="student-list-body" class="text-sm divide-y divide-slate-100 dark:divide-slate-700">
                                     </tbody>
                             </table>
                         </div>
@@ -237,31 +237,31 @@
 
             <div id="tab-settings" class="space-y-6 max-w-4xl mx-auto hidden">
                 <div>
-                    <h1 class="text-2xl font-bold text-slate-900">Cài đặt Hệ thống</h1>
-                    <p class="text-sm text-slate-500 mt-1">Thiết lập các tham số vận hành cho hệ thống điểm danh.</p>
+                    <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Cài đặt Hệ thống</h1>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Thiết lập các tham số vận hành cho hệ thống điểm danh.</p>
                 </div>
 
-                <div class="bg-white p-8 rounded-2xl border border-slate-200/80 shadow-sm">
-                    <h3 class="font-bold text-slate-800 text-lg mb-1">Cấu hình Ca làm việc</h3>
-                    <p class="text-sm text-slate-500 mb-6">Quy định về thời gian điểm danh hợp lệ.</p>
+                <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm">
+                    <h3 class="font-bold text-slate-800 dark:text-slate-100 text-lg mb-1">Cấu hình Ca làm việc</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Quy định về thời gian điểm danh hợp lệ.</p>
                     
                     <div class="space-y-5">
                         <div>
-                            <label for="set-shiftName" class="block text-sm font-semibold text-slate-600 mb-1.5">Tên ca</label>
-                            <input type="text" id="set-shiftName" placeholder="VD: Ca Sáng, Giờ Hành chính..." class="w-full max-w-md px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-300">
+                            <label for="set-shiftName" class="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Tên ca</label>
+                            <input type="text" id="set-shiftName" placeholder="VD: Ca Sáng, Giờ Hành chính..." class="w-full max-w-md px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:bg-white dark:focus:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-300 dark:text-slate-200 dark:placeholder-slate-400">
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
                             <div>
-                                <label for="set-startTime" class="block text-sm font-semibold text-slate-600 mb-1.5">Giờ vào</label>
-                                <input type="time" id="set-startTime" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-300">
+                                <label for="set-startTime" class="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Giờ vào</label>
+                                <input type="time" id="set-startTime" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:bg-white dark:focus:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-300 dark:text-slate-200">
                             </div>
                             <div>
-                                <label for="set-endTime" class="block text-sm font-semibold text-slate-600 mb-1.5">Giờ tan</label>
-                                <input type="time" id="set-endTime" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-300">
+                                <label for="set-endTime" class="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Giờ tan</label>
+                                <input type="time" id="set-endTime" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:bg-white dark:focus:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-300 dark:text-slate-200">
                             </div>
                             <div>
-                                <label for="set-lateThreshold" class="block text-sm font-semibold text-slate-600 mb-1.5">Phút đi trễ cho phép</label>
-                                <input type="number" id="set-lateThreshold" placeholder="VD: 15" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-300">
+                                <label for="set-lateThreshold" class="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Phút đi trễ cho phép</label>
+                                <input type="number" id="set-lateThreshold" placeholder="VD: 15" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:bg-white dark:focus:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all duration-300 dark:text-slate-200 dark:placeholder-slate-400">
                             </div>
                         </div>
                         <div class="pt-4">
@@ -303,6 +303,8 @@
 
             toggleDarkMode() {
                 document.documentElement.classList.toggle('dark');
+                this.chart.update();
+                this.doughnut.update();
             },
 
             async fetchHealth() {
@@ -386,8 +388,12 @@
                         }]
                     },
                     options: { 
-                        responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-                        scales: { y: { beginAtZero: true, grid: { color: '#e2e8f0' } }, x: { grid: { display: false } } }
+                        responsive: true, maintainAspectRatio: false, 
+                        plugins: { legend: { display: false } },
+                        scales: { 
+                            y: { beginAtZero: true, grid: { color: () => document.documentElement.classList.contains('dark') ? '#334155' : '#e2e8f0' }, ticks: { color: () => document.documentElement.classList.contains('dark') ? '#94a3b8' : '#64748b' } }, 
+                            x: { grid: { display: false }, ticks: { color: () => document.documentElement.classList.contains('dark') ? '#94a3b8' : '#64748b' } } 
+                        }
                     }
                 });
             },
@@ -407,7 +413,12 @@
                     },
                     options: {
                         responsive: true, maintainAspectRatio: false, cutout: '75%',
-                        plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 15, font: { size: 11 } } } }
+                        plugins: { 
+                            legend: { 
+                                position: 'bottom', 
+                                labels: { usePointStyle: true, padding: 15, font: { size: 11 }, color: () => document.documentElement.classList.contains('dark') ? '#cbd5e1' : '#475569' } 
+                            } 
+                        }
                     }
                 });
             },
@@ -461,20 +472,20 @@
                 
                 // Trạng thái Empty State (Không có dữ liệu)
                 if (data.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="3" class="py-10 text-center text-slate-500 font-medium">
-                        <svg class="w-12 h-12 mx-auto text-slate-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+                    tbody.innerHTML = `<tr><td colspan="3" class="py-10 text-center text-slate-500 dark:text-slate-400 font-medium">
+                        <svg class="w-12 h-12 mx-auto text-slate-300 dark:text-slate-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
                         Không tìm thấy dữ liệu sinh viên nào.
                     </td></tr>`;
                     return;
                 }
 
                 tbody.innerHTML = data.map(st => `
-                    <tr class="hover:bg-slate-50 transition-colors duration-200">
-                        <td class="py-4 px-6 font-mono text-xs font-semibold text-slate-500">${st.uid}</td>
-                        <td class="py-4 px-6 font-bold text-slate-800">${st.fullName}</td>
-                        <td class="py-4 px-6 text-sm text-slate-500 flex items-center justify-between">
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors duration-200">
+                        <td class="py-4 px-6 font-mono text-xs font-semibold text-slate-500 dark:text-slate-400">${st.uid}</td>
+                        <td class="py-4 px-6 font-bold text-slate-800 dark:text-slate-100">${st.fullName}</td>
+                        <td class="py-4 px-6 text-sm text-slate-500 dark:text-slate-400 flex items-center justify-between">
                             <span>${new Date(st.registeredAt).toLocaleDateString('vi-VN')}</span>
-                            <button onclick="app.editStudent('${st.uid}', '${st.fullName}')" class="text-indigo-600 hover:text-indigo-800 font-bold px-3 py-1 bg-indigo-50 hover:bg-indigo-100 rounded-md transition-colors text-xs border border-indigo-200">Sửa</button>
+                            <button onclick="app.editStudent('${st.uid}', '${st.fullName}')" class="text-indigo-600 hover:text-indigo-800 font-bold px-3 py-1 bg-indigo-50 dark:bg-indigo-900/50 dark:hover:bg-indigo-900 hover:bg-indigo-100 rounded-md transition-colors text-xs border border-indigo-200">Sửa</button>
                         </td>
                     </tr>
                 `).join('');
@@ -591,14 +602,14 @@
                     if(index < 10) {
                         const timeStr = d.toLocaleTimeString('vi-VN');
                         const isUnknown = log.status === "Chưa đăng ký";
-                        const nameColor = isUnknown ? 'text-rose-500' : 'text-slate-800';
+                        const nameColor = isUnknown ? 'text-rose-500' : 'text-slate-800 dark:text-slate-100';
                         const badgeColor = log.status === "Đúng giờ" ? 'bg-emerald-100 text-emerald-700' : (isUnknown ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-700');
 
                         miniLogHTML.push(`
-                            <li class="p-3 hover:bg-slate-50 rounded-xl flex items-center justify-between transition-colors duration-200">
+                            <li class="p-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-xl flex items-center justify-between transition-colors duration-200">
                                 <div>
                                     <p class="font-bold text-sm ${nameColor}">${log.fullName || 'Thẻ lạ'}</p>
-                                    <p class="text-xs text-slate-400 font-mono mt-0.5">UID: ${log.uid}</p>
+                                    <p class="text-xs text-slate-400 dark:text-slate-500 font-mono mt-0.5">UID: ${log.uid}</p>
                                 </div>
                                 <div class="text-right">
                                     <span class="px-2 py-1 rounded text-[10px] font-bold uppercase ${badgeColor}">${log.status}</span>
