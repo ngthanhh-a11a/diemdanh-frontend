@@ -769,40 +769,18 @@
                 }
             },
 
-            async exportExcel() {
-                const tempInput = document.createElement('input');
-                // Phải ẩn input đi và thêm vào DOM để Flatpickr có thể định vị chính xác
-                tempInput.type = 'hidden';
-                document.body.appendChild(tempInput);
-                
-                const fp = flatpickr(tempInput, {
-                    mode: "range",
-                    dateFormat: "Y-m-d",
-                    defaultDate: [document.getElementById('date-filter').value],
-                    locale: "vn", // Hiển thị lịch bằng tiếng Việt
-                    onClose: async (selectedDates) => {
-                        fp.destroy(); // Dọn dẹp instance
-                        tempInput.remove(); // Dọn dẹp input tạm
             // Mở popup xuất Excel
             exportExcel() {
                 const modal = document.getElementById('export-modal');
                 const modalContent = document.getElementById('export-modal-content');
                 const startDateInput = document.getElementById('export-start');
                 const endDateInput = document.getElementById('export-end');
-
-                        if (selectedDates.length === 0) {
-                            this.showToast("Đã hủy thao tác xuất báo cáo.", "error");
-                            return;
-                        }
+ 
                 // Đặt ngày mặc định từ bộ lọc chính
                 const currentDate = document.getElementById('date-filter').value;
                 startDateInput.value = currentDate;
                 endDateInput.value = currentDate;
-
-                        const btn = document.getElementById('export-excel-btn');
-                        const icon = document.getElementById('export-excel-icon');
-                        const text = document.getElementById('export-excel-text');
-                        const originalIconHTML = icon.outerHTML;
+ 
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
                 setTimeout(() => {
@@ -810,19 +788,12 @@
                     modalContent.classList.remove('scale-95');
                 }, 10);
             },
-
-                        btn.disabled = true;
-                        text.innerText = 'Đang xử lý...';
-                        icon.outerHTML = `<svg id="export-excel-icon" class="w-4 h-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+ 
             // Đóng popup
             closeExportModal() {
                 const modal = document.getElementById('export-modal');
                 const modalContent = document.getElementById('export-modal-content');
-
-                        try {
-                            const formatDate = (date) => date.toISOString().split('T')[0];
-                            const startDate = formatDate(selectedDates[0]);
-                            const endDate = selectedDates.length > 1 ? formatDate(selectedDates[1]) : startDate;
+ 
                 modal.classList.add('opacity-0');
                 modalContent.classList.add('scale-95');
                 setTimeout(() => {
@@ -830,72 +801,45 @@
                     modal.classList.remove('flex');
                 }, 300);
             },
-
-                            const res = await fetch(`${API_URL}/report/excel?startDate=${startDate}&endDate=${endDate}`);
-                            if (!res.ok) throw new Error('Lỗi khi tạo file báo cáo từ server.');
+ 
             // Xác nhận và tiến hành xuất file
             async confirmExportExcel() {
                 const startDate = document.getElementById('export-start').value;
                 const endDate = document.getElementById('export-end').value;
-
-                            const blob = await res.blob();
-                            const url = window.URL.createObjectURL(blob);
-                            const a = document.createElement('a');
-                            a.style.display = 'none';
-                            a.href = url;
+ 
                 if (!startDate || !endDate) return this.showToast('Vui lòng chọn đủ ngày.', 'error');
                 if (new Date(startDate) > new Date(endDate)) return this.showToast('Ngày bắt đầu không thể lớn hơn ngày kết thúc.', 'error');
-
-                            let filename = `BaoCaoDiemDanh_${startDate}`;
-                            if (startDate !== endDate) {
-                                filename += `_den_${endDate}`;
-                            }
-                            a.download = `${filename}.xlsx`;
+ 
                 this.closeExportModal();
-
-                            document.body.appendChild(a);
-                            a.click();
-                            window.URL.revokeObjectURL(url);
-                            a.remove();
+ 
                 const btn = document.getElementById('export-excel-btn');
                 const icon = document.getElementById('export-excel-icon');
                 const text = document.getElementById('export-excel-text');
                 const originalIconHTML = icon.outerHTML;
-
-                            this.showToast('Xuất file Excel thành công!');
-                        } catch (error) {
-                            this.showToast(error.message || 'Không thể xuất file Excel.', 'error');
-                        } finally {
-                            btn.disabled = false;
-                            text.innerText = 'Xuất Excel';
-                            document.getElementById('export-excel-icon').outerHTML = originalIconHTML;
-                        }
-                    },
-                });
+ 
                 btn.disabled = true;
                 text.innerText = 'Đang xử lý...';
                 icon.outerHTML = `<svg id="export-excel-icon" class="w-4 h-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
-
-                fp.open();
+ 
                 try {
                     const res = await fetch(`${API_URL}/report/excel?startDate=${startDate}&endDate=${endDate}`);
                     if (!res.ok) throw new Error('Lỗi khi tạo file báo cáo từ server.');
-
+ 
                     const blob = await res.blob();
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.style.display = 'none';
                     a.href = url;
-
+ 
                     let filename = `BaoCaoDiemDanh_${startDate}`;
                     if (startDate !== endDate) filename += `_den_${endDate}`;
                     a.download = `${filename}.xlsx`;
-
+ 
                     document.body.appendChild(a);
                     a.click();
                     window.URL.revokeObjectURL(url);
                     a.remove();
-
+ 
                     this.showToast('Xuất file Excel thành công!');
                 } catch (error) {
                     this.showToast(error.message || 'Không thể xuất file Excel.', 'error');
