@@ -28,8 +28,6 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
     <script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
-    <!-- Thư viện mã hóa Crypto-JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
         ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -536,12 +534,9 @@
 
         // Cấu hình tài khoản
         const ADMIN_USER = "admin";
-        // Mật khẩu đã được mã hóa bằng SHA256. Mật khẩu gốc là: 123456
-        // Để đổi mật khẩu, hãy tạo chuỗi hash mới và dán vào đây.
-        const ADMIN_PASS_HASH = "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92";
-        // Mật khẩu mặc định đã được mã hóa bằng SHA256. Mật khẩu gốc là: nttu@2026
+        // Mật khẩu mặc định là: nttu@2026
         // Mật khẩu mới sẽ được lưu trong localStorage.
-        const ADMIN_PASS_HASH = "f961a8478e6358153f559b352dd555943794b3b34785b75904f13f14c510197a";
+        const ADMIN_PASS = "123456";
 
         // Hàm kiểm tra khi vừa load web
         document.addEventListener("DOMContentLoaded", () => {
@@ -561,14 +556,10 @@
             const pass = document.getElementById('login-password').value;
             const errorText = document.getElementById('login-error');
 
-            // Lấy hash hiện tại từ localStorage hoặc fallback về hash mặc định
-            const currentAdminHash = localStorage.getItem("nttu_admin_hash") || ADMIN_PASS_HASH;
+            // Lấy mật khẩu hiện tại từ localStorage hoặc fallback về mật khẩu mặc định
+            const currentAdminPass = localStorage.getItem("nttu_admin_pass") || ADMIN_PASS;
 
-            // Mã hóa mật khẩu người dùng nhập vào để so sánh
-            const hashedPass = CryptoJS.SHA256(pass).toString();
-
-            if (user === ADMIN_USER && hashedPass === ADMIN_PASS_HASH) {
-            if (user === ADMIN_USER && hashedPass === currentAdminHash) {
+            if (user === ADMIN_USER && pass === currentAdminPass) {
                 // Đúng mật khẩu -> Lưu trạng thái vào trình duyệt
                 localStorage.setItem("nttu_auth_status", "true");
                 
@@ -1091,14 +1082,12 @@
                 if (newPass.length < 6) return this.showToast('Mật khẩu mới phải có ít nhất 6 ký tự.', 'error');
 
                 // Kiểm tra mật khẩu hiện tại
-                const currentHash = localStorage.getItem("nttu_admin_hash") || ADMIN_PASS_HASH;
-                const hashedCurrentPass = CryptoJS.SHA256(currentPass).toString();
+                const currentAdminPass = localStorage.getItem("nttu_admin_pass") || ADMIN_PASS;
 
-                if (hashedCurrentPass !== currentHash) return this.showToast('Mật khẩu hiện tại không chính xác.', 'error');
+                if (currentPass !== currentAdminPass) return this.showToast('Mật khẩu hiện tại không chính xác.', 'error');
 
-                // Lưu hash mật khẩu mới vào localStorage
-                const newHashedPass = CryptoJS.SHA256(newPass).toString();
-                localStorage.setItem("nttu_admin_hash", newHashedPass);
+                // Lưu mật khẩu mới vào localStorage
+                localStorage.setItem("nttu_admin_pass", newPass);
 
                 this.showToast('Đổi mật khẩu thành công!');
                 this.closeChangePasswordModal();
