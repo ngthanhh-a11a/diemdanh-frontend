@@ -28,6 +28,8 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
     <script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
+    <!-- Thư viện mã hóa Crypto-JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
         ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -148,11 +150,26 @@
         <!-- Khu vực Hồ sơ Quản trị viên -->
         <div class="p-4 relative z-10">
             <div class="p-2.5 bg-zinc-900 hover:bg-zinc-800/80 rounded-lg border border-zinc-800 flex items-center gap-3 overflow-hidden cursor-pointer transition-all duration-300 active:scale-[0.98]">
+            <!-- Nút bấm để mở menu -->
+            <div id="profile-trigger" onclick="app.toggleProfileMenu()" class="p-2.5 bg-zinc-900 hover:bg-zinc-800/80 rounded-lg border border-zinc-800 flex items-center gap-3 overflow-hidden cursor-pointer transition-all duration-300 active:scale-[0.98]">
                 <div class="w-9 h-9 shrink-0 rounded-md bg-zinc-700 flex items-center justify-center text-zinc-300 font-medium text-sm">T</div>
                 <div class="sidebar-text whitespace-nowrap transition-opacity duration-300">
                     <h4 class="text-sm font-medium text-zinc-200 tracking-tight">Đức Thành</h4>
                     <p class="text-[10px] text-zinc-500 uppercase tracking-widest font-mono mt-0.5">System Admin</p>
                 </div>
+            </div>
+
+            <!-- Menu xổ xuống (Dropdown) -->
+            <div id="profile-menu" class="hidden absolute bottom-full mb-2 left-4 right-4 bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl p-2 transition-all duration-200 opacity-0 transform scale-95">
+                <button onclick="app.openChangePasswordModal()" class="w-full flex items-center gap-3 text-zinc-300 hover:bg-zinc-800 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    <span class="sidebar-text">Đổi mật khẩu</span>
+                </button>
+                <div class="h-px bg-zinc-800 my-1"></div>
+                <button onclick="handleLogout()" class="w-full flex items-center gap-3 text-red-400 hover:bg-red-500/10 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                    <span class="sidebar-text">Đăng xuất</span>
+                </button>
             </div>
         </div>
     </aside>
@@ -474,15 +491,57 @@
         </div>
     </div>
 
+    <!-- ===================================== -->
+    <!-- POPUP ĐỔI MẬT KHẨU -->
+    <!-- ===================================== -->
+    <div id="change-password-modal" class="fixed inset-0 z-[999] hidden items-center justify-center transition-all duration-300 opacity-0">
+        <!-- Lớp nền Đen mờ -->
+        <div class="absolute inset-0 bg-gray-950/60 backdrop-blur-md" onclick="app.closeChangePasswordModal()"></div>
+
+        <!-- Khối Hộp thoại -->
+        <div id="change-password-modal-content" class="relative w-full max-w-md bg-white dark:bg-[#09090b] border border-gray-200 dark:border-gray-800/80 rounded-[2rem] shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] transform scale-95 transition-all duration-300 overflow-hidden">
+            
+            <!-- Phần Tiêu đề -->
+            <div class="px-8 pt-8 pb-6 border-b border-gray-100 dark:border-gray-800/50">
+                <div class="flex items-center gap-4 mb-2">
+                    <div class="p-3 bg-yellow-50 dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 rounded-2xl border border-yellow-100 dark:border-yellow-500/20">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">Đổi Mật Khẩu</h3>
+                        <p class="text-[11px] text-gray-500 mt-1 font-mono uppercase tracking-widest">Security Settings</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phần Nội dung -->
+            <div class="p-8 space-y-5 bg-gray-50/50 dark:bg-[#18181b]/50">
+                <div><label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2 uppercase tracking-wider">Mật khẩu hiện tại</label><input type="password" id="current-password" class="w-full bg-white dark:bg-[#09090b] border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 font-mono text-sm focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 shadow-sm"></div>
+                <div><label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2 uppercase tracking-wider">Mật khẩu mới</label><input type="password" id="new-password" class="w-full bg-white dark:bg-[#09090b] border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 font-mono text-sm focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 shadow-sm"></div>
+                <div><label class="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2 uppercase tracking-wider">Xác nhận mật khẩu mới</label><input type="password" id="confirm-password" class="w-full bg-white dark:bg-[#09090b] border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 font-mono text-sm focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 shadow-sm"></div>
+            </div>
+
+            <!-- Phần Nút bấm -->
+            <div class="px-8 py-5 border-t border-gray-100 dark:border-gray-800/50 flex gap-3 justify-end bg-white dark:bg-[#09090b]">
+                <button onclick="app.closeChangePasswordModal()" class="px-5 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors active:scale-95">Hủy</button>
+                <button onclick="app.confirmChangePassword()" class="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95 shadow-sm hover:opacity-90">Lưu thay đổi</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // =====================================
         // LOGIC ĐĂNG NHẬP (AUTHENTICATION)
         // =====================================
 
-        // Cấu hình tài khoản (Vì yêu cầu đơn giản nên chúng ta hardcode tại đây)
-        // Nếu muốn đổi pass, bạn chỉ cần sửa 2 dòng này
+        // Cấu hình tài khoản
         const ADMIN_USER = "admin";
-        const ADMIN_PASS = "123456"; 
+        // Mật khẩu đã được mã hóa bằng SHA256. Mật khẩu gốc là: 123456
+        // Để đổi mật khẩu, hãy tạo chuỗi hash mới và dán vào đây.
+        const ADMIN_PASS_HASH = "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92";
+        // Mật khẩu mặc định đã được mã hóa bằng SHA256. Mật khẩu gốc là: nttu@2026
+        // Mật khẩu mới sẽ được lưu trong localStorage.
+        const ADMIN_PASS_HASH = "f961a8478e6358153f559b352dd555943794b3b34785b75904f13f14c510197a";
 
         // Hàm kiểm tra khi vừa load web
         document.addEventListener("DOMContentLoaded", () => {
@@ -502,7 +561,14 @@
             const pass = document.getElementById('login-password').value;
             const errorText = document.getElementById('login-error');
 
-            if (user === ADMIN_USER && pass === ADMIN_PASS) {
+            // Lấy hash hiện tại từ localStorage hoặc fallback về hash mặc định
+            const currentAdminHash = localStorage.getItem("nttu_admin_hash") || ADMIN_PASS_HASH;
+
+            // Mã hóa mật khẩu người dùng nhập vào để so sánh
+            const hashedPass = CryptoJS.SHA256(pass).toString();
+
+            if (user === ADMIN_USER && hashedPass === ADMIN_PASS_HASH) {
+            if (user === ADMIN_USER && hashedPass === currentAdminHash) {
                 // Đúng mật khẩu -> Lưu trạng thái vào trình duyệt
                 localStorage.setItem("nttu_auth_status", "true");
                 
@@ -556,6 +622,16 @@
                     document.documentElement.classList.add('dark');
                 }
                 
+                // Listener để đóng menu profile khi click ra ngoài
+                document.addEventListener('click', (event) => {
+                    const menu = document.getElementById('profile-menu');
+                    const trigger = document.getElementById('profile-trigger');
+                    if (menu && trigger && !menu.classList.contains('hidden')) {
+                        if (!trigger.contains(event.target) && !menu.contains(event.target)) {
+                            this.toggleProfileMenu();
+                        }
+                    }
+                });
                 // Bù trừ múi giờ để bộ lọc ngày luôn hiển thị chuẩn giờ Local (Việt Nam)
                 const today = new Date();
                 today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
@@ -590,6 +666,21 @@
                 }
                 this.chart.update();
                 this.doughnut.update();
+            },
+
+            toggleProfileMenu() {
+                const menu = document.getElementById('profile-menu');
+                if (menu.classList.contains('hidden')) {
+                    menu.classList.remove('hidden');
+                    setTimeout(() => {
+                        menu.classList.remove('opacity-0', 'scale-95');
+                    }, 10);
+                } else {
+                    menu.classList.add('opacity-0', 'scale-95');
+                    setTimeout(() => {
+                        menu.classList.add('hidden');
+                    }, 200); // duration-200
+                }
             },
 
             toggleSidebar() {
@@ -958,6 +1049,59 @@
                     text.innerText = 'Xuất Excel';
                     document.getElementById('export-excel-icon').outerHTML = originalIconHTML;
                 }
+            },
+
+            openChangePasswordModal() {
+                this.toggleProfileMenu(); // Đóng menu profile trước
+                const modal = document.getElementById('change-password-modal');
+                const modalContent = document.getElementById('change-password-modal-content');
+                
+                // Xóa các trường input
+                document.getElementById('current-password').value = '';
+                document.getElementById('new-password').value = '';
+                document.getElementById('confirm-password').value = '';
+
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    modalContent.classList.remove('scale-95');
+                }, 10);
+            },
+
+            closeChangePasswordModal() {
+                const modal = document.getElementById('change-password-modal');
+                const modalContent = document.getElementById('change-password-modal-content');
+
+                modal.classList.add('opacity-0');
+                modalContent.classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                }, 300);
+            },
+
+            async confirmChangePassword() {
+                const currentPass = document.getElementById('current-password').value;
+                const newPass = document.getElementById('new-password').value;
+                const confirmPass = document.getElementById('confirm-password').value;
+
+                if (!currentPass || !newPass || !confirmPass) return this.showToast('Vui lòng điền đầy đủ thông tin.', 'error');
+                if (newPass !== confirmPass) return this.showToast('Mật khẩu mới không khớp.', 'error');
+                if (newPass.length < 6) return this.showToast('Mật khẩu mới phải có ít nhất 6 ký tự.', 'error');
+
+                // Kiểm tra mật khẩu hiện tại
+                const currentHash = localStorage.getItem("nttu_admin_hash") || ADMIN_PASS_HASH;
+                const hashedCurrentPass = CryptoJS.SHA256(currentPass).toString();
+
+                if (hashedCurrentPass !== currentHash) return this.showToast('Mật khẩu hiện tại không chính xác.', 'error');
+
+                // Lưu hash mật khẩu mới vào localStorage
+                const newHashedPass = CryptoJS.SHA256(newPass).toString();
+                localStorage.setItem("nttu_admin_hash", newHashedPass);
+
+                this.showToast('Đổi mật khẩu thành công!');
+                this.closeChangePasswordModal();
             },
 
             // =====================================
