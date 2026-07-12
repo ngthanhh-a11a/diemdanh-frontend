@@ -26,6 +26,7 @@
     <!-- Thư viện chọn giờ Flatpickr -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
     <script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -721,6 +722,9 @@
 
             async exportExcel() {
                 const tempInput = document.createElement('input');
+                // Phải ẩn input đi và thêm vào DOM để Flatpickr có thể định vị chính xác
+                tempInput.type = 'hidden';
+                document.body.appendChild(tempInput);
                 
                 const fp = flatpickr(tempInput, {
                     mode: "range",
@@ -728,7 +732,8 @@
                     defaultDate: [document.getElementById('date-filter').value],
                     locale: "vn", // Hiển thị lịch bằng tiếng Việt
                     onClose: async (selectedDates) => {
-                        fp.destroy(); // Dọn dẹp instance sau khi dùng
+                        fp.destroy(); // Dọn dẹp instance
+                        tempInput.remove(); // Dọn dẹp input tạm
 
                         if (selectedDates.length === 0) {
                             this.showToast("Đã hủy thao tác xuất báo cáo.", "error");
