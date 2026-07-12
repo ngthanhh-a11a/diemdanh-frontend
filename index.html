@@ -353,83 +353,19 @@
                         <h1 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Shift Configuration</h1>
                         <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Quản lý và thiết lập các ca học trong ngày.</p>
                     </div>
-                    <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-transform active:scale-95 shadow-sm text-sm flex items-center gap-2">
+                    <!-- Đã thêm sự kiện onclick cho nút Thêm Ca Mới -->
+                    <button onclick="app.addNewShift()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-transform active:scale-95 shadow-sm text-sm flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                         Thêm Ca Mới
                     </button>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Khối cấu hình Ca Sáng -->
-                    <div class="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm relative overflow-hidden group">
-                        <div class="flex justify-between items-center mb-4">
-                            <div class="flex items-center gap-3">
-                                <div class="bg-amber-500/10 p-2 rounded-lg text-amber-500 border border-amber-500/20">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                                </div>
-                                <h3 class="font-bold text-lg text-zinc-900 dark:text-zinc-100">Ca Sáng</h3>
-                            </div>
-                            <!-- Nút gạt Toggle -->
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" value="" class="sr-only peer" checked>
-                                <div class="w-11 h-6 bg-zinc-200 dark:bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 dark:after:border-zinc-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
-                            </label>
-                        </div>
-                        
-                        <div class="space-y-4 mt-6">
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1 uppercase tracking-wider">Giờ Bắt đầu</label>
-                                    <input type="time" value="07:00" class="w-full bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-lg px-3 py-2 font-mono text-sm focus:ring-2 focus:ring-indigo-500 dark:text-zinc-200">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1 uppercase tracking-wider">Giờ Kết thúc</label>
-                                    <input type="time" value="11:30" class="w-full bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-lg px-3 py-2 font-mono text-sm focus:ring-2 focus:ring-indigo-500 dark:text-zinc-200">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1 uppercase tracking-wider">Ngưỡng Đi Muộn (Phút)</label>
-                                <input type="number" value="15" class="w-full bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-lg px-3 py-2 font-mono text-sm focus:ring-2 focus:ring-indigo-500 dark:text-zinc-200">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Khối cấu hình Ca Chiều -->
-                    <div class="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm relative overflow-hidden group">
-                        <div class="flex justify-between items-center mb-4">
-                            <div class="flex items-center gap-3">
-                                <div class="bg-indigo-500/10 p-2 rounded-lg text-indigo-400 border border-indigo-500/20">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                                </div>
-                                <h3 class="font-bold text-lg text-zinc-900 dark:text-zinc-100">Ca Chiều</h3>
-                            </div>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" value="" class="sr-only peer" checked>
-                                <div class="w-11 h-6 bg-zinc-200 dark:bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 dark:after:border-zinc-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
-                            </label>
-                        </div>
-                        
-                        <div class="space-y-4 mt-6">
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1 uppercase tracking-wider">Giờ Bắt đầu</label>
-                                    <input type="time" value="13:00" class="w-full bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-lg px-3 py-2 font-mono text-sm focus:ring-2 focus:ring-indigo-500 dark:text-zinc-200">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1 uppercase tracking-wider">Giờ Kết thúc</label>
-                                    <input type="time" value="17:30" class="w-full bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-lg px-3 py-2 font-mono text-sm focus:ring-2 focus:ring-indigo-500 dark:text-zinc-200">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1 uppercase tracking-wider">Ngưỡng Đi Muộn (Phút)</label>
-                                <input type="number" value="15" class="w-full bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-lg px-3 py-2 font-mono text-sm focus:ring-2 focus:ring-indigo-500 dark:text-zinc-200">
-                            </div>
-                        </div>
-                    </div>
+                <!-- Khung chứa các ca học động (Trống rỗng, JS sẽ tự điền) -->
+                <div id="shifts-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 </div>
                 
                 <div class="mt-6">
-                    <button class="w-full bg-zinc-900 dark:bg-zinc-50 text-white dark:text-zinc-900 hover:bg-zinc-700 dark:hover:bg-zinc-200 font-semibold py-3 px-4 rounded-xl transition-transform active:scale-95 shadow-sm">
+                    <button onclick="app.saveShiftSettings()" class="w-full bg-zinc-900 dark:bg-zinc-50 text-white dark:text-zinc-900 hover:bg-zinc-700 dark:hover:bg-zinc-200 font-semibold py-3 px-4 rounded-xl transition-transform active:scale-95 shadow-sm">
                         Lưu Thay Đổi Hệ Thống
                     </button>
                 </div>
@@ -447,6 +383,7 @@
             doughnut: null,
             lastLogCount: 0,
             allStudents: [],
+            shiftsData: [], // Mảng lưu trữ dữ liệu các ca học hiện tại
             isSidebarCollapsed: false,
 
             async init() {
@@ -778,40 +715,114 @@
                 }
             },
 
+            // =====================================
+            // LOGIC CÀI ĐẶT CA HỌC (ĐỘNG)
+            // =====================================
             async fetchShiftSettings() {
                 try {
                     const res = await fetch(`${API_URL}/settings/shift`);
-                    if (!res.ok) throw new Error('Cannot fetch settings');
-                    const settings = await res.json();
-                    
-                    document.getElementById('set-shiftName').value = settings.shiftName || '';
-                    document.getElementById('set-startTime').value = settings.startTime || '00:00';
-                    document.getElementById('set-endTime').value = settings.endTime || '00:00';
-                    document.getElementById('set-lateThreshold').value = settings.lateThreshold || 0;
+                    if (!res.ok) throw new Error("Network error");
+                    this.shiftsData = await res.json();
+                    this.renderShifts(); // Vẽ dữ liệu ra màn hình
+                } catch (error) {
+                    this.showToast("Không thể tải cấu hình hệ thống", "error");
+                }
+            },
 
-                } catch (e) {
-                    this.showToast("Không thể tải cấu hình ca!", "error");
+            // Hàm tự động vẽ các thẻ HTML cấu hình dựa trên mảng shiftsData
+            renderShifts() {
+                const container = document.getElementById('shifts-container');
+                container.innerHTML = this.shiftsData.map((shift, index) => `
+                    <div class="shift-card bg-white dark:bg-[#18181b] p-6 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm relative overflow-hidden group" data-index="${index}">
+                        <div class="flex justify-between items-center mb-4">
+                            <!-- Ô nhập tên ca học (có thể sửa trực tiếp) -->
+                            <input type="text" id="shift-name-${index}" value="${shift.shiftName}" placeholder="Nhập tên ca..." class="font-bold text-lg bg-transparent border-b border-dashed border-gray-400 focus:border-indigo-500 focus:outline-none max-w-[150px] dark:text-white">
+                            
+                            <div class="flex items-center gap-4">
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="shift-active-${index}" class="sr-only peer" ${shift.isActive ? 'checked' : ''}>
+                                    <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                </label>
+                                <!-- Nút Xóa Ca Học -->
+                                <button onclick="app.removeShift(${index})" class="text-gray-400 hover:text-red-500 transition-colors" title="Xóa ca này">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4 mt-6">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-500 mb-1 uppercase tracking-wider">Giờ Bắt đầu <span class="text-indigo-400 lowercase">(00:00 - 23:59)</span></label>
+                                    <input type="time" id="shift-start-${index}" value="${shift.startTime}" required class="w-full bg-gray-50 dark:bg-[#09090b] border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 font-mono text-sm focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-gray-500 mb-1 uppercase tracking-wider">Giờ Kết thúc <span class="text-indigo-400 lowercase">(00:00 - 23:59)</span></label>
+                                    <input type="time" id="shift-end-${index}" value="${shift.endTime}" required class="w-full bg-gray-50 dark:bg-[#09090b] border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 font-mono text-sm focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-gray-500 mb-1 uppercase tracking-wider">Ngưỡng Đi Muộn (Số Phút)</label>
+                                <input type="number" id="shift-late-${index}" value="${shift.lateThreshold}" min="0" class="w-full bg-gray-50 dark:bg-[#09090b] border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 font-mono text-sm focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100">
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            },
+
+            // Hàm đồng bộ: Lấy giá trị đang gõ dở trên UI lưu ngược vào mảng
+            syncUItoData() {
+                const cards = document.querySelectorAll('.shift-card');
+                cards.forEach(card => {
+                    const i = card.getAttribute('data-index');
+                    this.shiftsData[i].shiftName = document.getElementById(`shift-name-${i}`).value;
+                    this.shiftsData[i].startTime = document.getElementById(`shift-start-${i}`).value;
+                    this.shiftsData[i].endTime = document.getElementById(`shift-end-${i}`).value;
+                    this.shiftsData[i].lateThreshold = parseInt(document.getElementById(`shift-late-${i}`).value) || 0;
+                    this.shiftsData[i].isActive = document.getElementById(`shift-active-${i}`).checked;
+                });
+            },
+
+            // Hàm Thêm ca mới
+            addNewShift() {
+                this.syncUItoData(); // Lưu lại các số liệu đang chỉnh sửa
+                this.shiftsData.push({
+                    shiftID: 'SHIFT_' + Date.now(), // Tạo ID độc nhất
+                    shiftName: 'Ca Mới',
+                    startTime: '18:00',
+                    endTime: '21:00',
+                    lateThreshold: 15,
+                    isActive: true
+                });
+                this.renderShifts(); // Vẽ lại giao diện với thẻ ca mới
+            },
+
+            // Hàm Xóa ca học
+            removeShift(index) {
+                if(confirm("Bạn có chắc chắn muốn xóa ca học này?")) {
+                    this.syncUItoData();
+                    this.shiftsData.splice(index, 1); // Xóa khỏi mảng
+                    this.renderShifts(); // Vẽ lại giao diện
                 }
             },
 
             async saveShiftSettings() {
-                const settings = {
-                    shiftName: document.getElementById('set-shiftName').value,
-                    startTime: document.getElementById('set-startTime').value,
-                    endTime: document.getElementById('set-endTime').value,
-                    lateThreshold: document.getElementById('set-lateThreshold').value,
-                };
+                this.syncUItoData(); // Gom toàn bộ dữ liệu cuối cùng trên UI
 
                 try {
                     const res = await fetch(`${API_URL}/settings/shift`, {
-                        method: 'PUT',
+                        method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(settings)
+                        body: JSON.stringify(this.shiftsData) // Đẩy toàn bộ mảng lên Backend
                     });
-                    if (!res.ok) throw new Error('Failed to save');
-                    this.showToast("Cập nhật cấu hình ca thành công!");
-                } catch (e) {
-                    this.showToast("Lỗi khi lưu cấu hình!", "error");
+                    
+                    if (res.ok) {
+                        this.showToast("Đã lưu cấu hình hệ thống!", "success");
+                    } else {
+                        throw new Error("Lỗi Server");
+                    }
+                } catch (error) {
+                    this.showToast("Lỗi khi lưu cấu hình", "error");
                 }
             },
 
