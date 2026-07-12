@@ -47,6 +47,50 @@
 </head>
 <body class="bg-white dark:bg-[#09090b] text-zinc-900 dark:text-zinc-300 flex h-screen overflow-hidden antialiased">
 
+    <!-- ===================================== -->
+    <!-- MÀN HÌNH ĐĂNG NHẬP (MONOCHROME) -->
+    <!-- ===================================== -->
+    <div id="login-screen" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black">
+        <!-- Ảnh nền Đen Trắng nghệ thuật -->
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop')] bg-cover bg-center opacity-40"></div>
+        
+        <!-- Lớp phủ mờ (Vignette) để làm nổi bật form -->
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/90"></div>
+
+        <!-- Khối Form Đăng Nhập -->
+        <div class="relative w-full max-w-md p-8 m-4 bg-black/40 backdrop-blur-xl border border-white/10 rounded-[2rem] shadow-[0_0_50px_-12px_rgba(255,255,255,0.1)]">
+            
+            <!-- Logo & Tiêu đề -->
+            <div class="text-center mb-10">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white text-black mb-4 shadow-lg">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                </div>
+                <h1 class="text-2xl font-bold text-white tracking-tight">NTTU SYSTEM</h1>
+                <p class="text-sm text-gray-400 mt-2 font-mono uppercase tracking-widest">Authentication Required</p>
+            </div>
+
+            <!-- Form Nhập liệu -->
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-[11px] font-semibold text-gray-400 mb-2 uppercase tracking-wider">Tên tài khoản</label>
+                    <input type="text" id="login-username" autocomplete="off" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 font-mono text-sm text-white focus:ring-2 focus:ring-white focus:border-transparent transition-all placeholder-gray-600 outline-none" placeholder="admin">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold text-gray-400 mb-2 uppercase tracking-wider">Mật khẩu bảo mật</label>
+                    <input type="password" id="login-password" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 font-mono text-sm text-white focus:ring-2 focus:ring-white focus:border-transparent transition-all placeholder-gray-600 outline-none" placeholder="••••••••">
+                </div>
+                
+                <!-- Dòng báo lỗi (Mặc định ẩn) -->
+                <p id="login-error" class="text-red-400 text-xs text-center font-medium hidden">Tài khoản hoặc mật khẩu không chính xác!</p>
+
+                <button onclick="handleLogin()" class="w-full bg-white text-black font-bold text-sm py-3.5 rounded-xl hover:bg-gray-200 transition-all active:scale-95 flex items-center justify-center gap-2 mt-4 shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                    Đăng Nhập Hệ Thống
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- MÀN HÌNH LOADING TOÀN HỆ THỐNG -->
     <div id="global-loader" class="fixed inset-0 z-[100] bg-[#09090b] flex flex-col items-center justify-center transition-opacity duration-500">
         <div class="relative flex items-center justify-center">
@@ -61,6 +105,7 @@
         <p class="text-zinc-500 text-sm mt-2">Đang khởi tạo hệ thống...</p>
     </div>
 
+    <div id="main-app" class="hidden flex w-full h-full">
     <aside id="sidebar" class="w-64 bg-[#09090b] border-r border-zinc-800/80 text-zinc-400 flex flex-col justify-between shrink-0 z-20 hidden md:flex transition-all duration-300 ease-in-out relative">
         
         <div class="relative z-10">
@@ -378,6 +423,7 @@
 
         </div>
     </main>
+    </div>
 
     <!-- ===================================== -->
     <!-- POPUP XUẤT EXCEL (PREMIUM SAAS) -->
@@ -429,6 +475,66 @@
     </div>
 
     <script>
+        // =====================================
+        // LOGIC ĐĂNG NHẬP (AUTHENTICATION)
+        // =====================================
+
+        // Cấu hình tài khoản (Vì yêu cầu đơn giản nên chúng ta hardcode tại đây)
+        // Nếu muốn đổi pass, bạn chỉ cần sửa 2 dòng này
+        const ADMIN_USER = "admin";
+        const ADMIN_PASS = "123456"; 
+
+        // Hàm kiểm tra khi vừa load web
+        document.addEventListener("DOMContentLoaded", () => {
+            const isLoggedIn = localStorage.getItem("nttu_auth_status");
+            
+            if (isLoggedIn === "true") {
+                // Đã đăng nhập -> Ẩn màn hình Login, Hiện Dashboard
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('main-app').classList.remove('hidden');
+                app.init();
+            }
+        });
+
+        // Hàm xử lý khi bấm nút Đăng nhập
+        function handleLogin() {
+            const user = document.getElementById('login-username').value;
+            const pass = document.getElementById('login-password').value;
+            const errorText = document.getElementById('login-error');
+
+            if (user === ADMIN_USER && pass === ADMIN_PASS) {
+                // Đúng mật khẩu -> Lưu trạng thái vào trình duyệt
+                localStorage.setItem("nttu_auth_status", "true");
+                
+                errorText.classList.add('hidden');
+
+                // Hiệu ứng mờ dần màn hình Login rồi biến mất
+                const loginScreen = document.getElementById('login-screen');
+                loginScreen.style.transition = "opacity 0.5s ease";
+                loginScreen.style.opacity = "0";
+                
+                setTimeout(() => {
+                    loginScreen.classList.add('hidden');
+                    document.getElementById('main-app').classList.remove('hidden');
+                    app.init().then(() => {
+                        app.showToast("Đăng nhập hệ thống thành công!", "success");
+                    });
+                }, 500);
+
+            } else {
+                errorText.classList.remove('hidden');
+                const formDiv = errorText.closest('.relative');
+                formDiv.classList.add('animate-pulse');
+                setTimeout(() => formDiv.classList.remove('animate-pulse'), 500);
+            }
+        }
+
+        // Hàm Đăng xuất (Gắn vào nút Đăng xuất trên Avatar của bạn nếu có)
+        function handleLogout() {
+            localStorage.removeItem("nttu_auth_status");
+            window.location.reload(); // Load lại trang sẽ tự văng ra màn hình Login
+        }
+
         // Thay IP cũ bằng IP mới
         const API_URL = "https://chamcong-sv-nttu.onrender.com/api";
 
@@ -441,6 +547,10 @@
             isSidebarCollapsed: false,
 
             async init() {
+                // Tránh khởi tạo lại nếu đã chạy rồi
+                if (this.initialized) return;
+                this.initialized = true;
+
                 // Áp dụng theme đã lưu, mặc định là light
                 if (localStorage.getItem('theme') === 'dark') {
                     document.documentElement.classList.add('dark');
@@ -1029,7 +1139,6 @@
             }
         };
 
-        window.onload = () => app.init();
     </script>
 </body>
 </html>
