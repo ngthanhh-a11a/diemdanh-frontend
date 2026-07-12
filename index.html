@@ -23,6 +23,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Thư viện chọn giờ Flatpickr -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <style>
         body { font-family: 'Inter', sans-serif; }
         ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -754,11 +757,13 @@
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-[11px] font-semibold text-gray-500 mb-1 uppercase tracking-wider">Giờ Bắt đầu <span class="text-indigo-400 lowercase">(00:00 - 23:59)</span></label>
-                                    <input type="time" lang="en-GB" id="shift-start-${index}" value="${shift.startTime}" required class="w-full bg-gray-50 dark:bg-[#09090b] border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 font-mono text-sm focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100">
+                                    <!-- Đổi type thành text, thêm class time-picker -->
+                                    <input type="text" id="shift-start-${index}" value="${shift.startTime}" required class="time-picker w-full bg-gray-50 dark:bg-[#09090b] border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 font-mono text-sm focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 placeholder-gray-400" placeholder="00:00">
                                 </div>
                                 <div>
                                     <label class="block text-[11px] font-semibold text-gray-500 mb-1 uppercase tracking-wider">Giờ Kết thúc <span class="text-indigo-400 lowercase">(00:00 - 23:59)</span></label>
-                                    <input type="time" lang="en-GB" id="shift-end-${index}" value="${shift.endTime}" required class="w-full bg-gray-50 dark:bg-[#09090b] border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 font-mono text-sm focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100">
+                                    <!-- Đổi type thành text, thêm class time-picker -->
+                                    <input type="text" id="shift-end-${index}" value="${shift.endTime}" required class="time-picker w-full bg-gray-50 dark:bg-[#09090b] border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 font-mono text-sm focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-gray-100 placeholder-gray-400" placeholder="00:00">
                                 </div>
                             </div>
                             <div>
@@ -768,6 +773,14 @@
                         </div>
                     </div>
                 `).join('');
+
+                // Kích hoạt thư viện Flatpickr ép hiển thị 24h
+                flatpickr(".time-picker", {
+                    enableTime: true,      // Bật chế độ chọn giờ
+                    noCalendar: true,      // Tắt chọn ngày
+                    dateFormat: "H:i",     // Định dạng 24h (Giờ:Phút)
+                    time_24hr: true        // BẮT BUỘC SỬ DỤNG 24H (Không có AM/PM)
+                });
             },
 
             // Hàm đồng bộ: Lấy giá trị đang gõ dở trên UI lưu ngược vào mảng
