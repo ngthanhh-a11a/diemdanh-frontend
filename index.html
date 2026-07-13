@@ -105,8 +105,11 @@
         <p class="text-zinc-500 text-sm mt-2">Đang khởi tạo hệ thống...</p>
     </div>
 
-    <div id="main-app" class="hidden flex w-full h-full">
-    <aside id="sidebar" class="w-64 bg-[#09090b] border-r border-zinc-800/80 text-zinc-400 flex flex-col justify-between shrink-0 z-20 hidden md:flex transition-all duration-300 ease-in-out relative">
+    <div id="main-app" class="hidden flex w-full h-full relative">
+        <!-- Lớp phủ mờ khi mở sidebar trên mobile -->
+        <div id="sidebar-backdrop" class="fixed inset-0 bg-black/60 z-20 hidden md:hidden" onclick="app.toggleSidebar()"></div>
+
+    <aside id="sidebar" class="w-64 bg-[#09090b] border-r border-zinc-800/80 text-zinc-400 flex flex-col justify-between shrink-0 z-30 hidden md:flex transition-all duration-300 ease-in-out absolute md:relative inset-y-0 left-0">
         
         <div class="relative z-10">
             <!-- Khu vực Logo -->
@@ -648,11 +651,12 @@
                     dateFormat: "d/m/Y", // Định dạng thân thiện với người dùng
                     defaultDate: [new Date()], // Mặc định là hôm nay
                     locale: "vn", // Sử dụng ngôn ngữ Tiếng Việt
-                    onChange: (selectedDates, dateStr, instance) => {
-                        // Tự động tải lại log khi người dùng chọn xong
-                        if (selectedDates.length === 1 || selectedDates.length === 2) {
-                            this.fetchLogs();
-                        }
+                    // Sử dụng onClose để chỉ fetch dữ liệu một lần khi người dùng đã chọn xong.
+                    // Đây là cách làm đúng và ổn định hơn so với onChange cho bộ lọc khoảng ngày.
+                    onClose: (selectedDates, dateStr, instance) => {
+                        // Luôn gọi fetchLogs khi đóng calendar.
+                        // Hàm fetchLogs sẽ tự xử lý trường hợp không có ngày nào được chọn.
+                        this.fetchLogs();
                     }
                 });
             },
@@ -685,22 +689,26 @@
             },
 
             toggleSidebar() {
-                this.isSidebarCollapsed = !this.isSidebarCollapsed;
                 const sidebar = document.getElementById('sidebar');
-                const texts = document.querySelectorAll('.sidebar-text');
+                const backdrop = document.getElementById('sidebar-backdrop');
+                const isMobile = window.innerWidth < 768; // Tailwind's 'md' breakpoint (768px)
 
-                if (this.isSidebarCollapsed) {
-                    sidebar.classList.replace('w-64', 'w-20');
-                    texts.forEach(t => { 
-                        t.classList.add('opacity-0', 'w-0');
-                        setTimeout(() => t.classList.add('hidden'), 300);
-                    });
+                if (isMobile) {
+                    // Trên di động: hiển thị/ẩn sidebar như một lớp phủ
+                    sidebar.classList.toggle('hidden');
+                    backdrop.classList.toggle('hidden');
                 } else {
-                    sidebar.classList.replace('w-20', 'w-64');
-                    texts.forEach(t => { 
-                        t.classList.remove('hidden');
-                        setTimeout(() => t.classList.remove('opacity-0', 'w-0'), 10);
-                    });
+                    // Trên desktop: thu gọn/mở rộng sidebar
+                    this.isSidebarCollapsed = !this.isSidebarCollapsed;
+                    const texts = document.querySelectorAll('.sidebar-text');
+
+                    if (this.isSidebarCollapsed) {
+                        sidebar.classList.replace('w-64', 'w-20');
+                        texts.forEach(t => { t.classList.add('opacity-0', 'w-0'); setTimeout(() => t.classList.add('hidden'), 300); });
+                    } else {
+                        sidebar.classList.replace('w-20', 'w-64');
+                        texts.forEach(t => { t.classList.remove('hidden'); setTimeout(() => t.classList.remove('opacity-0', 'w-0'), 10); });
+                    }
                 }
             },
 
@@ -829,6 +837,7 @@
 
                     if (selectedDates.length === 0) {
                         this.renderDashboard([]); // Xóa dữ liệu nếu không có ngày nào được chọn
+                        this.lastDataString = null; // Xóa cache để đảm bảo giao diện được cập nhật
                         return;
                     }
 
