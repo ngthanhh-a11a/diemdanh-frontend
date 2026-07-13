@@ -218,9 +218,13 @@
                         <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Phân tích dữ liệu điểm danh theo thời gian thực.</p>
                     </div>
                     <div class="flex items-center gap-3">
-                        <input type="date" id="date-filter" onchange="app.fetchLogs()" class="px-4 py-2 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-zinc-500 font-medium text-zinc-600 dark:text-zinc-300 shadow-sm cursor-pointer outline-none transition-all text-sm">
+                        <!-- Bộ lọc ngày chuyên nghiệp (Date Range Picker) -->
+                        <div class="relative">
+                            <input type="text" id="date-range-picker" placeholder="Chọn khoảng thời gian..." class="w-full sm:w-64 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded-lg pl-10 pr-4 py-2 focus:ring-2 focus:ring-zinc-500 font-medium text-zinc-600 dark:text-zinc-300 shadow-sm cursor-pointer outline-none transition-all text-sm">
+                            <svg class="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        </div>
                         
-                        <button id="export-excel-btn" onclick="app.exportExcel()" class="flex items-center justify-center gap-2 w-[130px] bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-300 font-semibold py-2 px-4 rounded-lg transition-all duration-300 border border-zinc-200 dark:border-zinc-700/80 hover:border-green-300 dark:hover:border-green-500/50 hover:bg-green-100 dark:hover:bg-green-950 hover:text-green-700 dark:hover:text-green-400 active:scale-95 active:bg-green-200 dark:active:bg-green-900 text-sm disabled:opacity-70 disabled:pointer-events-none">
+                        <button id="export-excel-btn" onclick="app.exportExcel()" class="flex items-center justify-center gap-2 w-auto sm:w-[130px] bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-300 font-semibold py-2 px-4 rounded-lg transition-all duration-300 border border-zinc-200 dark:border-zinc-700/80 hover:border-green-300 dark:hover:border-green-500/50 hover:bg-green-100 dark:hover:bg-green-950 hover:text-green-700 dark:hover:text-green-400 active:scale-95 active:bg-green-200 dark:active:bg-green-900 text-sm disabled:opacity-70 disabled:pointer-events-none">
                             <svg id="export-excel-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                             <span id="export-excel-text">Xuất Excel</span>
                         </button>
@@ -617,12 +621,9 @@
                         }
                     }
                 });
-                // Bù trừ múi giờ để bộ lọc ngày luôn hiển thị chuẩn giờ Local (Việt Nam)
-                const today = new Date();
-                today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
-                document.getElementById('date-filter').value = today.toISOString().split('T')[0];
-
+       
                 this.initClock();
+                this.initDateRangePicker();
                 this.initChart();
                 this.initDoughnut();
 
@@ -639,6 +640,21 @@
 
                 setInterval(() => this.fetchLogs(), 2000);
                 setInterval(() => this.fetchHealth(), 5000);
+            },
+
+            initDateRangePicker() {
+                flatpickr("#date-range-picker", {
+                    mode: "range",
+                    dateFormat: "d/m/Y", // Định dạng thân thiện với người dùng
+                    defaultDate: [new Date()], // Mặc định là hôm nay
+                    locale: "vn", // Sử dụng ngôn ngữ Tiếng Việt
+                    onChange: (selectedDates, dateStr, instance) => {
+                        // Tự động tải lại log khi người dùng chọn xong
+                        if (selectedDates.length === 1 || selectedDates.length === 2) {
+                            this.fetchLogs();
+                        }
+                    }
+                });
             },
 
             toggleDarkMode() {
@@ -808,8 +824,28 @@
 
             async fetchLogs() {
                 try {
-                    const selectedDate = document.getElementById('date-filter').value;
-                    const res = await fetch(`${API_URL}/logs?date=${selectedDate}`);
+                    const picker = document.querySelector("#date-range-picker")._flatpickr;
+                    const selectedDates = picker.selectedDates;
+
+                    if (selectedDates.length === 0) {
+                        this.renderDashboard([]); // Xóa dữ liệu nếu không có ngày nào được chọn
+                        return;
+                    }
+
+                    // Hàm helper để format ngày sang YYYY-MM-DD cho API
+                    const formatDateForAPI = (date) => {
+                        const d = new Date(date);
+                        const year = d.getFullYear();
+                        const month = ('0' + (d.getMonth() + 1)).slice(-2);
+                        const day = ('0' + d.getDate()).slice(-2);
+                        return `${year}-${month}-${day}`;
+                    }
+
+                    const startDate = formatDateForAPI(selectedDates[0]);
+                    // Nếu chỉ chọn 1 ngày, ngày kết thúc sẽ là ngày đó luôn
+                    const endDate = selectedDates.length > 1 ? formatDateForAPI(selectedDates[1]) : startDate;
+
+                    const res = await fetch(`${API_URL}/logs?startDate=${startDate}&endDate=${endDate}`);
                     if(!res.ok) throw new Error();
                     const data = await res.json();
                     
@@ -962,10 +998,27 @@
                 const startDateInput = document.getElementById('export-start');
                 const endDateInput = document.getElementById('export-end');
  
-                // Đặt ngày mặc định từ bộ lọc chính
-                const currentDate = document.getElementById('date-filter').value;
-                startDateInput.value = currentDate;
-                endDateInput.value = currentDate;
+                // Lấy khoảng ngày đã chọn từ bộ lọc chính để điền vào popup
+                const picker = document.querySelector("#date-range-picker")._flatpickr;
+                const selectedDates = picker.selectedDates;
+
+                const formatDateForAPI = (date) => {
+                    const d = new Date(date);
+                    const year = d.getFullYear();
+                    const month = ('0' + (d.getMonth() + 1)).slice(-2);
+                    const day = ('0' + d.getDate()).slice(-2);
+                    return `${year}-${month}-${day}`;
+                }
+
+                if (selectedDates.length > 0) {
+                    startDateInput.value = formatDateForAPI(selectedDates[0]);
+                    endDateInput.value = selectedDates.length > 1 ? formatDateForAPI(selectedDates[1]) : formatDateForAPI(selectedDates[0]);
+                } else {
+                    // Nếu chưa chọn gì, mặc định là hôm nay
+                    const todayStr = formatDateForAPI(new Date());
+                    startDateInput.value = todayStr;
+                    endDateInput.value = todayStr;
+                }
  
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
