@@ -106,6 +106,11 @@
     </div>
 
     <div id="main-app" class="hidden flex w-full h-full relative">
+        <!-- ===================================== -->
+        <!-- HIỆU ỨNG BÁO ĐỘNG ĐỎ (SIREN OVERLAY) -->
+        <!-- ===================================== -->
+        <div id="siren-overlay" class="fixed inset-0 z-[9998] pointer-events-none hidden bg-red-600/30 animate-pulse"></div>
+
         <!-- Lớp phủ mờ khi mở sidebar trên mobile -->
         <div id="sidebar-backdrop" class="fixed inset-0 bg-black/60 z-20 hidden md:hidden" onclick="app.toggleSidebar()"></div>
 
@@ -1362,6 +1367,46 @@
                 }, 1000);
             }
         };
+
+        // =====================================
+        // HỆ THỐNG RADAR BÁO ĐỘNG (WEB UI SIREN)
+        // =====================================
+
+        // Thay thế link Google bằng tên file âm thanh nằm trong cùng thư mục
+        const sirenAudio = new Audio('bao-dong.mp3'); 
+        sirenAudio.loop = true; // Cho hú liên tục đến khi hết báo động
+        let isSirenPlaying = false;
+
+        // Cứ mỗi 2 giây, Frontend sẽ hỏi thăm Backend 1 lần
+        setInterval(async () => {
+            try {
+                const res = await fetch(`${API_URL}/alert/check`);
+                const data = await res.json();
+                const overlay = document.getElementById('siren-overlay');
+
+                if (data.isAlert) {
+                    // 1. Bật hiệu ứng chớp đỏ
+                    overlay.classList.remove('hidden');
+
+                    // 2. Kích hoạt còi hú
+                    if (!isSirenPlaying) {
+                        // Bọc trong try..catch để tránh lỗi Autoplay Policy của trình duyệt
+                        sirenAudio.play().catch(err => console.warn("Chưa được phép phát âm thanh:", err));
+                        isSirenPlaying = true;
+                    }
+                } else {
+                    // 3. Tắt báo động khi đã an toàn
+                    overlay.classList.add('hidden');
+                    if (isSirenPlaying) {
+                        sirenAudio.pause();
+                        sirenAudio.currentTime = 0; // Trả đoạn âm thanh về giây thứ 0
+                        isSirenPlaying = false;
+                    }
+                }
+            } catch (error) {
+                // Lỗi mạng thì im lặng bỏ qua, không làm phiền người dùng
+            }
+        }, 2000);
 
     </script>
 </body>
