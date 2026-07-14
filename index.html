@@ -1283,6 +1283,28 @@
                 }
             },
 
+            async remoteResetDevice() {
+                if (!confirm("Bạn có chắc chắn muốn khởi động lại máy chấm công từ xa không? Hành động này không thể hoàn tác.")) {
+                    return;
+                }
+
+                try {
+                    this.showToast("Đang gửi lệnh khởi động lại...", "success");
+                    const res = await fetch(`${API_URL}/device/reset`, {
+                        method: 'POST'
+                    });
+
+                    if (res.ok) {
+                        this.showToast("Lệnh khởi động lại đã được gửi thành công!", "success");
+                    } else {
+                        const err = await res.json();
+                        this.showToast(err.error || "Không thể gửi lệnh.", "error");
+                    }
+                } catch (error) {
+                    this.showToast("Lỗi kết nối khi gửi lệnh reset.", "error");
+                }
+            },
+
             renderDashboard(logs) {
                 let onTime = 0, late = 0, unknown = 0;
                 const hourlyData = new Array(24).fill(0);
